@@ -23,13 +23,12 @@ class LoginController extends Controller{
         }
         $user = UserService::getUserByPhone($phone);
         if( !$user ){
-            $this->error("此手机号未注册，正在跳转到注册页面！", U('Login/regist', array('phone'=>$phone)));
+            $this->error("此手机号未被注册，正在跳转到注册页面！", U('Login/regist', array('phone'=>$phone)));
         }
         if( $user['password'] == md5(I("password")) ){
             session("username", $phone);
             $this->success("登录成功！",U('Index/index'));
         }
-
     }
 
     /**
@@ -52,8 +51,15 @@ class LoginController extends Controller{
     }
 
     public function registHandler(){
-        $user['phone'] = I("phone");
-        $user['password'] = md5(I("password"));
+        $phone = I("phone");
+        $password = I("password");
+        $user['phone'] = $phone;
+        $user['password'] = md5($password);
+
+        if( !UserService::checkUserInfo($user) ){
+            $this->error("请将信息填写完整！");
+        }
+
         if( M("user")->add($user) ){
             $this->success("注册成功！", U('Index/index'));
         }else{
@@ -62,7 +68,19 @@ class LoginController extends Controller{
     }
 
     public function findPassword(){
+        $this->display("modifyPassword");
+    }
 
+    public function modifyPasswordHandler(){
+        $phone = I("phone");
+        $password = I("password");
+        $user['phone'] = $phone;
+        $user['password'] = md5($password);
+        if( !UserService::checkUserInfo($user) ){
+            $this->error("请将信息填写完整！");
+        }
+        UserService::updateUserInfo($user);
+        $this->success("修改成功！");
     }
 
 }

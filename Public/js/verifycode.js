@@ -22,6 +22,14 @@ function time(obj,btnValue){
     }
 }
 
+function checkPhoneNum(phoneNum){
+    if( phoneNum.length != 11 ){
+        return false;
+    }else{
+        return true;
+    }
+}
+
 /**
  * 添加发送验证码功能
  * @param buttonId 发送验证码按钮的id
@@ -33,29 +41,33 @@ function addSendVerifyCode(buttonId,phoneId,url){
     btn.attr("disabled",false);
     $(buttonId).click(function() {
         phoneNum = $(phoneId).val();
-        jsSendVerifyCode = Math.round(Math.random()*9000)+1000;
-        //发送验证码
-        var aj = $.ajax({
-            url: url,
-            data: {
-                phone: phoneNum,
-                code: jsSendVerifyCode
-            },
-            type: 'post',
-            cache: false,
-            dataType: 'json',
-            success: function (data) {
-                if (data.error_code) {
-                    alert(data.msg);
+        if( checkPhoneNum(phoneNum) ){
+            jsSendVerifyCode = Math.round(Math.random()*9000)+1000;
+            //发送验证码
+            var aj = $.ajax({
+                url: url,
+                data: {
+                    phone: phoneNum,
+                    code: jsSendVerifyCode
+                },
+                type: 'post',
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.error_code) {
+                        alert(data.msg);
+                    }
+                },
+                error: function () {
+                    alert("异常！");
                 }
-            },
-            error: function () {
-                alert("异常！");
-            }
-        });
-        //设置倒计时1分钟
-        jsSendMessageWait = 60;
-        time(btn,btn.val());
+            });
+            //设置倒计时1分钟
+            jsSendMessageWait = 60;
+            time(btn,btn.val());
+        }else{
+            alert("请输入正确的手机号码！");
+        }
     });
 }
 

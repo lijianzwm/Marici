@@ -34,4 +34,20 @@ class UserService{
         }
     }
 
+    public static function updateUserInfo($user){
+        if (M("user")->save($user)) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public static function checkUserInfo($user){
+        if( !$user['phone'] || !$user['password'] ){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
 }
