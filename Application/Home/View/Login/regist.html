@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+</head>
+<body>
+<form action="{:U('Login/registHandler')}" method="post">
+    <div>手机号：</div>
+    <div><input name="phone" id="phone" value="{$phone}"/><div id="enable_regist"></div></div>
+    <div>验证码:</div>
+    <div>
+        <input name="verify_code" id="verify_code" />
+        <input type="button" id="send_code_button" class="send-message" value="发送"/>
+    </div>
+    <div>密码：</div>
+    <div><input type="password" name="password"/></div>
+    <div><input type="submit" id="submit_button" value="注册" disabled="disabled"/></div>
+</form>
+<script src="__PUBLIC__/lib/jquery-1.7.2.min.js"></script>
+<script src="__PUBLIC__/js/verifycode.js"></script>
+<script type="text/javascript">
+    (function(){
+        eventHandler();
+        function eventHandler(){
+            addSendVerifyCode('#send_code_button','#phone',"{:U('Api/Message/sendVerifyCode')}");
+            addVolidateVerifyCode('#verify_code','#send_code_button','#submit_button');
+
+            $('#phone').blur(function(){
+                phoneNum = $('#phone').val();
+                if( !phoneNum ){
+                    $('#enable_regist').html("请填写手机号");
+                }else{
+                    var aj = $.ajax({
+                        url: "{:U('Login/isPhoneExist')}",
+                        data: {
+                            phone: phoneNum
+                        },
+                        type: 'post',
+                        cache: false,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.regist_state) {
+                                $('#enable_regist').html("已被注册");
+                            }else{
+                                $('#enable_regist').html("可以注册");
+                            }
+                        },
+                        error: function () {
+                            alert("异常！");
+                        }
+                    });
+                }
+            });
+
+        }
+    }());
+</script>
+</body>
+</html>

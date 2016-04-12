@@ -1,0 +1,4 @@
+config.php:
+    'AlidayuAppKey'    => '',  //你的阿里大鱼app key
+    'AlidayuAppSecret' => '',  //你的阿里大鱼app secret
+    'AlidayuApiEnv'    => 1, //api请求地址，1为正式环境，0为沙箱环境
