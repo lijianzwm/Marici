@@ -23,7 +23,7 @@ class LoginController extends Controller{
         }
         $user = UserService::getUserByPhone($phone);
         if( !$user ){
-            $this->error("无此手机号！");
+            $this->error("此手机号未注册，正在跳转到注册页面！", U('Login/regist', array('phone'=>$phone)));
         }
         if( $user['password'] == md5(I("password")) ){
             session("username", $phone);
@@ -46,6 +46,8 @@ class LoginController extends Controller{
     }
 
     public function regist(){
+        $phone = I("phone");
+        $this->assign("phone", $phone);
         $this->display();
     }
 
@@ -57,6 +59,10 @@ class LoginController extends Controller{
         }else{
             $this->error("注册失败！");
         }
+    }
+
+    public function findPassword(){
+
     }
 
 }

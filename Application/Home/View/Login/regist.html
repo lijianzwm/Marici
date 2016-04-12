@@ -7,7 +7,7 @@
 <body>
 <form action="{:U('Login/registHandler')}" method="post">
     <div>手机号：</div>
-    <div><input name="phone" id="phone" /><div id="enable_regist"></div></div>
+    <div><input name="phone" id="phone" value="{$phone}"/><div id="enable_regist"></div></div>
     <div>验证码:</div>
     <div>
         <input name="verify_code" id="verify_code" />

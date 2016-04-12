@@ -5,8 +5,15 @@
     <title>用户登陆</title>
 </head>
 <body>
-<div>手机号<input name="phone" id="phone"/></div>
-<div>验证码<input name="verify_code" id="verify_code"/></div>
-<div><a href="#">登录</a><a href="{:U('Login/regist')}">注册</a></div>
+<form action="{:U('Login/loginHandler')}" method="post">
+    <div>手机号<input name="phone" id="phone"/></div>
+    <div>密码<input type="password" name="password" id="password"/></div>
+    <div>
+        <input type="submit" value="登录"/>
+        <a href="{:U('Login/regist')}">注册</a>
+        <a href="{:U('Login/findPassword')}">忘记密码</a>
+    </div>
+</form>
+
 </body>
 </html>
