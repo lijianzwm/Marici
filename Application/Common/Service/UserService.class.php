@@ -50,4 +50,8 @@ class UserService{
         }
     }
 
+    public static function volidateLogin($loginInfo){
+
+    }
+
 }
