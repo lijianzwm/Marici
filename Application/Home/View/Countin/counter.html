@@ -3,15 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>计数器</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
     <style>
+        .counter-button{
+            width:100%;
+            height:200px;
+            font-size:5vw;
+            margin-bottom:20px;
+        }
+
+        .total-num{
+            display:inline-block;
+            margin-bottom:10px;
+        }
+
+        .total{
+            display:inline-block;
+        }
 
     </style>
 </head>
 <body>
+<div class="user-box-title" >在线持咒</div>
 <div>
-    <div>您当前总共持诵数目为：<div id="total"></div></div>
-    <div><input type="button" name="counter" id="counter" ></div>
-    <div><input type="button" name="sync" id="sync" value="同步到服务器"/></div>
+    <div>按“键盘任意键”或点击“数字按钮”均可进行计数，持咒结束后点击同步到服务器，系统就会自动将您本次持诵数目上报到服务器</div>
+    <div class="total-num">您当前总共持诵数目为：<div id="total" class="total"></div></div>
+    <div><input type="button" name="counter" id="counter" class="counter-button common-button" ></div>
+    <div>
+        <input type="button" name="sync" id="sync" class="common-button" value="同步到服务器"/>
+        <input type="button" name="reset" id="reset" class="common-button" value="清零"/>
+    </div>
 </div>
 <script src="__PUBLIC__/lib/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
@@ -29,7 +50,6 @@
                 StorageSetter:StorageSetter
             };
         })();
-
 
         Dom = {
             counter : $('#counter'),
@@ -51,10 +71,26 @@
         eventHandler();
         function eventHandler(){
 
-            Dom.counter.click(function(){
+            function addOne(){
                 num += 1;
                 Dom.counter.val(num);
                 Util.StorageSetter("num",num);
+            }
+
+            document.onkeydown = addOne;
+
+            Dom.counter.click(function(){
+                addOne();
+            });
+
+            $('#reset').click(function(){
+                if( confirm("清零之后将丢失当前计数，并且当前数目不被同步到服务器上，确定吗？")){
+                    if( confirm("清零之后将丢失当前计数，并且当前数目不被同步到服务器上，真的确定吗？")){
+                        Dom.counter.val(0);
+                        num = 0;
+                        Util.StorageSetter("num",0);
+                    }
+                }
             });
 
             Dom.sync.click(function(){
@@ -75,9 +111,9 @@
                             Dom.total.html(total);
                             num = 0;
                             //TODO 在屏幕上显示3秒钟提示框
-                            alert("上报成功！");
+                            alert("同步成功！");
                         }else{
-                            alert("上报失败！");
+                            alert("同步失败！");
                         }
                     },
                     error: function () {
