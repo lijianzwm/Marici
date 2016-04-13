@@ -12,6 +12,7 @@ use Think\Controller;
 use Common\Service\UserService;
 
 class LoginController extends Controller{
+
     public function login(){
         $this->display();
     }
@@ -64,7 +65,7 @@ class LoginController extends Controller{
         }
 
         if( M("user")->add($user) ){
-            $this->success("注册成功！", U('Index/index'));
+            $this->success("注册成功，快去完善个人信息吧~", U('Login/userCenter'));
         }else{
             $this->error("注册失败！");
         }
@@ -72,6 +73,12 @@ class LoginController extends Controller{
 
     public function findPassword(){
         $this->display("modifyPassword");
+    }
+
+    public function modifyPassword(){
+        $phone = I("phone");
+        $this->assign("phone", $phone);
+        $this->display();
     }
 
     public function modifyPasswordHandler(){
@@ -87,7 +94,21 @@ class LoginController extends Controller{
     }
 
     public function userCenter(){
+        $id =  session("userid");
+        $phone = session("phone");
+        if( $id && $phone ){
+            $user = UserService::getUserByPhone($phone);
+            $this->assign("user", $user);
+            $this->display();
+        }else{
+            redirect(U('Login/login'));
+        }
+    }
 
+    public function logout(){
+        session("userid", null);
+        session("phone", null);
+        redirect(U('Index/index'));
     }
 
 }
