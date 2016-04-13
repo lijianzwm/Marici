@@ -86,4 +86,8 @@ class LoginController extends Controller{
         $this->success("修改成功！");
     }
 
+    public function userCenter(){
+
+    }
+
 }
