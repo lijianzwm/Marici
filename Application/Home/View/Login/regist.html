@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>注册</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <style>
+        .red-text{
+            color: #ff0000;
+        }
+    </style>
 </head>
 <body>
+<div class="user-box-title">用户注册</div>
 <form action="{:U('Login/registHandler')}" method="post">
-    <div>手机号：</div>
-    <div><input name="phone" id="phone" value="{$phone}"/><div id="enable_regist"></div></div>
-    <div>验证码:</div>
-    <div>
-        <input name="verify_code" id="verify_code" />
-        <input type="button" id="send_code_button" class="send-message" value="发送"/>
+    <div class="user-box-item" id="phone_item">
+        手机号码
+        <input name="phone" id="phone" value="{$phone}"/>
     </div>
-    <div>密码：</div>
-    <div><input type="password" name="password"/></div>
-    <div><input type="submit" id="submit_button" value="注册" disabled="disabled"/></div>
+    <div class="user-box-item">
+        验证号码
+        <input name="verify_code" size="10" id="verify_code" />
+        <input type="button" id="send_code_button" class="common-button" value="发送"/>
+    </div>
+    <div class="user-box-item">
+        登录密码
+        <input type="password" name="password"/>
+    </div>
+    <div class="user-box-item">
+        <input type="submit" id="submit_button" class="common-button" value="注册" disabled="disabled"/>
+    </div>
 </form>
 <script src="__PUBLIC__/lib/jquery-1.7.2.min.js"></script>
 <script src="__PUBLIC__/js/verifycode.js"></script>
@@ -29,7 +42,7 @@
             $('#phone').blur(function(){
                 phoneNum = $('#phone').val();
                 if( !phoneNum ){
-                    $('#enable_regist').html("请填写手机号");
+                    alert("请填写手机号")
                 }else{
                     var aj = $.ajax({
                         url: "{:U('Login/isPhoneExist')}",
@@ -41,9 +54,10 @@
                         dataType: 'json',
                         success: function (data) {
                             if (data.regist_state) {
-                                $('#enable_regist').html("已被注册");
+                                alert("该手机号已被注册");
+                                $('#phone_item').addClass("red-text");
                             }else{
-                                $('#enable_regist').html("可以注册");
+                                $('#phone_item').removeClass("red-text");
                             }
                         },
                         error: function () {

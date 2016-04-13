@@ -26,8 +26,11 @@ class LoginController extends Controller{
             $this->error("此手机号未被注册，正在跳转到注册页面！", U('Login/regist', array('phone'=>$phone)));
         }
         if( $user['password'] == md5(I("password")) ){
-            session("username", $phone);
+            session("userid", $user['id']);
+            session("phone", $phone);
             $this->success("登录成功！",U('Index/index'));
+        }else{
+            $this->error("密码错误！");
         }
     }
 
@@ -81,6 +84,10 @@ class LoginController extends Controller{
         }
         UserService::updateUserInfo($user);
         $this->success("修改成功！");
+    }
+
+    public function userCenter(){
+
     }
 
 }
