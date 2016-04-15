@@ -23,4 +23,18 @@ class CountinController extends Controller{
         }
         echo json_encode($ret);
     }
+
+    public function getTotalNum(){
+        $id = I("userid");
+        $total = CountinService::getTotalNumById($id);
+        if( $total != -1 ){
+            $ret['error_code'] = 0;
+            $ret['num'] = $total;
+        }else{
+            $ret['error_code'] = 1;
+            $ret['num'] = $total;
+        }
+        echo json_encode($ret);
+    }
+
 }

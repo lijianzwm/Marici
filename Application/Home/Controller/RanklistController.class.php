@@ -14,7 +14,11 @@ use Common\Service\CacheService;
 
 class RanklistController extends Controller{
     public function index(){
-//        $this->display(Phpinfo());
-        CacheService::test();
+        $this->display(Phpinfo());
     }
+
+    public function todayRanklist(){
+
+    }
+
 }

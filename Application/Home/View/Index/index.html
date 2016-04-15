@@ -26,7 +26,6 @@
         .title{
             font-size:50px;
             text-align:center;
-            margin-bottom: 20px;
             color:#9D804B;
         }
 
@@ -57,10 +56,15 @@
         .video{
             width:500px;
             height:400px;
+            margin-top:20px;
             margin-bottom: 50px;
         }
 
-
+        .sub-title{
+            font-size:20px;
+            text-align:center;
+            color: #ff0000;
+        }
 
     </style>
 </head>
@@ -68,6 +72,7 @@
 <div id="top_bar" class="top-bar">
     <div><img src="__PUBLIC__/Image/logo.jpg"/></div>
     <div id="title" class="title">聖摩利支天护国息灾共修</div>
+    <div id="sub_title" class="sub-title">（内部测试版）</div>
 </div>
 <div class="video-wrapper">
     <iframe class="video" src="http://www.tudou.com/programs/view/html5embed.action?type=0&code=BM8dFkcp8o0&lcode=&resourceId=0_06_05_99" allowtransparency="true" allowfullscreen="true" allowfullscreenInteractive="true" scrolling="no" border="0" frameborder="0" ></iframe>
@@ -77,6 +82,7 @@
     <div class="menu-button"><a href="http://www.zhunti.net/contents/27/459.html">共修仪轨</a></div>
     <div class="menu-button"><a href="{:U('Countin/addNum')}">共修报数</a></div>
     <div class="menu-button"><a href="{:U('Countin/counter')}">在线持咒</a></div>
+    <div class="menu-button"><a href="{:U('Ranklist/todayRanklist')}">精进排行</a></div>
     <if condition="$isLogin eq 0">
         <div class="menu-button"><a href="{:U('Login/login')}">用户登录</a></div>
     <else />

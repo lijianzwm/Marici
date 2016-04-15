@@ -29,6 +29,7 @@ class LoginController extends Controller{
         if( $user['password'] == md5(I("password")) ){
             session("userid", $user['id']);
             session("phone", $phone);
+            session("showname", $user['showname']);
             $this->success("登录成功！",U('Index/index'));
         }else{
             $this->error("密码错误！");
@@ -59,12 +60,16 @@ class LoginController extends Controller{
         $password = I("password");
         $user['phone'] = $phone;
         $user['password'] = md5($password);
-
+        $user['showname'] = "师兄".substr($phone, -4);
         if( !UserService::checkUserInfo($user) ){
             $this->error("请将信息填写完整！");
         }
 
-        if( M("user")->add($user) ){
+        $id = M("user")->add($user);
+        if( $id ){
+            session("userid",$id);
+            session("phone", $phone);
+            session("showname", $user['showname']);
             $this->success("注册成功，快去完善个人信息吧~", U('Login/userCenter'));
         }else{
             $this->error("注册失败！");

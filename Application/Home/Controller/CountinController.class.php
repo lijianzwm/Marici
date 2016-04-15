@@ -27,7 +27,7 @@ class CountinController extends CommonController{
     }
 
     public function counter(){
-        $total = CountinService::getNumById(session("userid"));
+        $total = CountinService::getTotalNumById(session("userid"));
         $this->assign("total", $total);
         $this->display();
     }

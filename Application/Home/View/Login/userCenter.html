@@ -50,7 +50,6 @@
         phone = '{$user.phone}';
         realname = $('#realname').val();
         dharma = $('#dharma').val();
-        alert(realname);
         var aj = $.ajax({
             url: "{:U('Api/User/updateUserInfo')}",
             data: {
