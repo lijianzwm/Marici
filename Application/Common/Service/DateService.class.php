@@ -10,7 +10,7 @@ namespace Common\Service;
 
 
 class DateService{
-    public static function getDate(){
+    public static function getStrDate(){
         return date('y-m-d',time());
     }
 }

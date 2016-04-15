@@ -71,7 +71,7 @@ class CountinService{
     }
 
     public static function getMysqlTodayNumById($userid){
-        $todayDate = DateService::getDate();
+        $todayDate = DateService::getStrDate();
         $count = M("day_count")->where("userid='$userid', today_date='$todayDate'")->find();
         if( $count ){
             return $count['num'];
@@ -104,7 +104,7 @@ class CountinService{
 
     public static function addMysqlTodayNum( $userid, $num ){
         $dao = M();
-        $todayDate = strval(DateService::getDate());
+        $todayDate = DateService::getStrDate();
         $table = C("DB_PREFIX")."day_count";
         if( $dao->execute("update $table set num=num+$num where userid='$userid' AND today_date='$todayDate'") ){
             return true;
@@ -116,7 +116,7 @@ class CountinService{
     public static function insertMysqlTodayNum( $userid, $num ){
         $count['userid'] = $userid;
         $count['num'] = $num;
-        $count['today_date'] = DateService::getDate();
+        $count['today_date'] = DateService::getStrDate();
         if( M("day_count")->add($count) ){
             return true;
         }else{

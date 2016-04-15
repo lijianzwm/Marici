@@ -3,11 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <title>精进排行</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <style>
+
+        .title{
+            text-align:center;
+            font-size:30px;
+        }
+
+        .sub-title{
+            text-align:center;
+            font-size:14px;
+            margin-bottom:10px;
+        }
+
+        .rank-wrapper{
+            text-align:center;
+        }
+
+        .rank-title{
+            font-size:20px;
+            margin-bottom:10px;
+        }
+
+        .rank-title-elem{
+            display:inline-block;
+            width:100px;
+            text-align:center;
+        }
+
+        .rank-item{
+            margin-bottom:5px;
+        }
+
+        .your-position{
+            color:#ff0000;
+        }
+
+        .rank-item-elem{
+            font-size:20px;
+            display:inline-block;
+            width:100px;
+            text-align:center;
+        }
+
+    </style>
 </head>
 <body>
-<div>{$title}</div>
-<div>
-    <div></div>
+<div class="title">{$title}</div>
+<div class="sub-title">(排行榜每分钟更新一次)</div>
+<div class="rank-wrapper">
+    <div class="rank-title">
+        <div class="rank-title-elem">排名</div>
+        <div class="rank-title-elem">姓名</div>
+        <div class="rank-title-elem">数目</div>
+    </div>
+    <for start="0" end="count($ranklist)">
+        <if condition="$ranklist[$i]['userid'] eq $yourUserid">
+            <div class="your-position">
+                <div class="rank-item-elem">{$i+1}</div>
+                <div class="rank-item-elem">{$ranklist.$i.name}</div>
+                <div class="rank-item-elem">{$ranklist.$i.num}</div>
+            </div>
+        <else />
+            <div class="rank-item">
+                <div class="rank-item-elem">{$i+1}</div>
+                <div class="rank-item-elem">{$ranklist.$i.name}</div>
+                <div class="rank-item-elem">{$ranklist.$i.num}</div>
+            </div>
+        </if>
+    </for>
 </div>
 </body>
 </html>

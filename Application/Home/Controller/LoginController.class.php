@@ -89,13 +89,16 @@ class LoginController extends Controller{
     public function modifyPasswordHandler(){
         $phone = I("phone");
         $password = I("password");
-        $user['phone'] = $phone;
-        $user['password'] = md5($password);
-        if( !UserService::checkUserInfo($user) ){
+        if( !$phone || !$password ){
             $this->error("请将信息填写完整！");
         }
+        $user = UserService::getUserByPhone($phone);
+        session("userid", $user['id']);
+        session("phone", $user['phone']);
+        session("showname",$user['showname']);
+        $user['password'] = md5($password);
         UserService::updateUserInfo($user);
-        $this->success("修改成功！");
+        $this->success("修改成功！", U('Login/userCenter'));
     }
 
     public function userCenter(){
@@ -113,6 +116,7 @@ class LoginController extends Controller{
     public function logout(){
         session("userid", null);
         session("phone", null);
+        session("showname", null);
         redirect(U('Index/index'));
     }
 
