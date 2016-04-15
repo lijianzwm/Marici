@@ -4,6 +4,7 @@ CREATE TABLE `gx_user` (
   `password` varchar(32) NOT NULL COMMENT '密码',
   `realname` varchar(50) DEFAULT NULL COMMENT '真实姓名',
   `dharma` varchar(50) DEFAULT NULL COMMENT '法名',
+  `showname` varchar(50) DEFAULT NULL COMMENT '显示名',
   `total` bigint(20) NOT NULL DEFAULT '0' COMMENT '共修总数',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
