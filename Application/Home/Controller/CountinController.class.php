@@ -20,14 +20,14 @@ class CountinController extends CommonController{
         $num = I("num");
         $id = session("userid");
         if( CountinService::addNum($id,$num) ){
-            $this->success("报数成功！");
+            $this->success("报数成功！", U('Ranklist/todayRanklist'));
         }else{
             $this->error("报数失败！");
         }
     }
 
     public function counter(){
-        $total = CountinService::getNumById(session("userid"));
+        $total = CountinService::getTotalNumById(session("userid"));
         $this->assign("total", $total);
         $this->display();
     }

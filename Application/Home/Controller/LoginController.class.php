@@ -29,6 +29,7 @@ class LoginController extends Controller{
         if( $user['password'] == md5(I("password")) ){
             session("userid", $user['id']);
             session("phone", $phone);
+            session("showname", $user['showname']);
             $this->success("登录成功！",U('Index/index'));
         }else{
             $this->error("密码错误！");
@@ -59,12 +60,16 @@ class LoginController extends Controller{
         $password = I("password");
         $user['phone'] = $phone;
         $user['password'] = md5($password);
-
+        $user['showname'] = "师兄".substr($phone, -4);
         if( !UserService::checkUserInfo($user) ){
             $this->error("请将信息填写完整！");
         }
 
-        if( M("user")->add($user) ){
+        $id = M("user")->add($user);
+        if( $id ){
+            session("userid",$id);
+            session("phone", $phone);
+            session("showname", $user['showname']);
             $this->success("注册成功，快去完善个人信息吧~", U('Login/userCenter'));
         }else{
             $this->error("注册失败！");
@@ -84,13 +89,16 @@ class LoginController extends Controller{
     public function modifyPasswordHandler(){
         $phone = I("phone");
         $password = I("password");
-        $user['phone'] = $phone;
-        $user['password'] = md5($password);
-        if( !UserService::checkUserInfo($user) ){
+        if( !$phone || !$password ){
             $this->error("请将信息填写完整！");
         }
+        $user = UserService::getUserByPhone($phone);
+        session("userid", $user['id']);
+        session("phone", $user['phone']);
+        session("showname",$user['showname']);
+        $user['password'] = md5($password);
         UserService::updateUserInfo($user);
-        $this->success("修改成功！");
+        $this->success("修改成功！", U('Login/userCenter'));
     }
 
     public function userCenter(){
@@ -108,6 +116,7 @@ class LoginController extends Controller{
     public function logout(){
         session("userid", null);
         session("phone", null);
+        session("showname", null);
         redirect(U('Index/index'));
     }
 

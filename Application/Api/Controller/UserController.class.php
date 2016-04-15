@@ -19,9 +19,11 @@ class UserController extends Controller{
         $user['phone'] = I("phone");
         if( I("realname") ){
             $user['realname'] = I("realname");
+            $user['showname'] = I("realname");//如果有真实姓名的话，显示真实姓名
         }
         if( I("dharma")){
             $user['dharma'] = I("dharma");
+            $user['showname'] = I("dharma");//如果有法名的话，最优先显示法名，然后是真实姓名
         }
         if( UserService::updateUserInfo($user)){
             $ret['error_code'] = 0;

@@ -10,11 +10,19 @@ namespace Home\Controller;
 
 
 use Think\Controller;
-use Common\Service\CacheService;
+use Common\Service\RanklistService;
 
 class RanklistController extends Controller{
     public function index(){
-//        $this->display(Phpinfo());
-        CacheService::test();
+        $this->display(Phpinfo());
     }
+
+    public function todayRanklist(){
+        $ranklist = RanklistService::getTodayRanklist();
+        $this->assign("title", "今日排行");
+        $this->assign("yourUserid", session("userid"));
+        $this->assign("ranklist", $ranklist);
+        $this->display("ranklist");
+    }
+
 }
