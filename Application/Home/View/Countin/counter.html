@@ -30,6 +30,11 @@
     <div class="total-num">您当前总共持诵数目为：<div id="total" class="total"></div></div>
     <div><input type="button" name="counter" id="counter" class="counter-button common-button" ></div>
     <div>
+        <audio id="mlztsz" src="__PUBLIC__/audio/mlztsz.mp3" >亲 您的浏览器不支持html5的audio标签</audio>
+    </div>
+
+    <div>
+        <input type="button" id="follow_guru" class="common-button" value="跟师父一起念"/>
         <input type="button" name="sync" id="sync" class="common-button" value="同步到服务器"/>
         <input type="button" name="reset" id="reset" class="common-button" value="清零"/>
     </div>
@@ -54,8 +59,11 @@
         Dom = {
             counter : $('#counter'),
             sync : $('#sync'),
-            total :$('#total')
+            total :$('#total'),
+            audio: document.getElementById("mlztsz")
         };
+
+        autoChant = false;
 
         num = parseInt(Util.StorageGetter("num"));
         if( !num ){
@@ -81,6 +89,31 @@
 
             Dom.counter.click(function(){
                 addOne();
+            });
+
+            Dom.audio.addEventListener('ended',function(){
+                Dom.audio.play();
+                addOne();
+            });
+
+            $('#follow_guru').click(function(){
+                autoChant = !autoChant;
+                if( autoChant ){
+                    $('#follow_guru').val('||');
+                    Dom.audio.load();
+                    Dom.audio.play();
+                }else{
+                    $('#follow_guru').val('跟师父一起念');
+                    Dom.audio.pause();
+                }
+
+                var audio = document.createElement("audio");
+                audio.src = "piano/3C.mp3";
+                audio.addEventListener('ended', function () {
+                    // Wait 500 milliseconds before next loop
+                    setTimeout(function () { audio.play(); }, 500);
+                }, false);
+                audio.play();
             });
 
             $('#reset').click(function(){
