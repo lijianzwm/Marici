@@ -21,6 +21,10 @@
             display:inline-block;
         }
 
+        .hide{
+            display:none;
+        }
+
     </style>
 </head>
 <body>
@@ -30,9 +34,26 @@
     <div class="total-num">您当前总共持诵数目为：<div id="total" class="total"></div></div>
     <div><input type="button" name="counter" id="counter" class="counter-button common-button" ></div>
     <div>
-        <audio id="mlztsz" src="__PUBLIC__/audio/mlztsz.mp3" >亲 您的浏览器不支持html5的audio标签</audio>
+        <audio id="mlztsz" src="__PUBLIC__/Audio/{:C('MANTRA_SLOW')}" ></audio>
     </div>
-
+    <div id="chant_box" class="hide">
+        <div>
+            <input type="radio" name="chant_speed" id="chant_slow" checked="checked"/>慢诵
+            <input type="radio" name="chant_speed" id="chant_fast" />快诵
+        </div>
+        <div>
+            <input type="radio" name="chant_type" id="chant_108" value="108" checked="checked" />108遍
+            <input type="radio" name="chant_type" id="chant_1080" value="1080" />1080遍
+            <input type="radio" name="chant_type" id="chant_diy" value="0" />自定义
+            <input type="radio" name="chant_type" id="chant_forever" value="-1" />随力持诵
+        </div>
+        <div id="chant_num_box" >
+            <input id="chant_num" class="hide" value="108"/>
+        </div>
+        <div>
+            <input type="button" id="start_chant" class="common-button" value="开始持诵"/>
+        </div>
+    </div>
     <div>
         <input type="button" id="follow_guru" class="common-button" value="跟师父一起念"/>
         <input type="button" name="sync" id="sync" class="common-button" value="同步到服务器"/>
@@ -42,8 +63,12 @@
 <script src="__PUBLIC__/lib/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
     (function(){
+        fastChant = "__PUBLIC__/Audio/"+"{:C('MANTRA_FAST')}";
+        slowChant = "__PUBLIC__/Audio/"+"{:C('MANTRA_SLOW')}";
+        chantNum = 0;
+
         var Util = (function(){
-            var prefix = 'mlztgx_counter_';
+            var prefix = "{:C('HTML5_LOCALSTORAGE_PREFIX')}"+'counter_';
             var StorageGetter = function(key){
                 return localStorage.getItem(prefix+key);
             }
@@ -60,6 +85,8 @@
             counter : $('#counter'),
             sync : $('#sync'),
             total :$('#total'),
+            chantBox : $('#chant_box'),
+            chantNum:$('#chant_num'),
             audio: document.getElementById("mlztsz")
         };
 
@@ -72,6 +99,43 @@
         }else{
             Dom.counter.val(num);
         }
+
+        function swicthChantType() {
+            switch ($("input[name=chant_type]:checked").attr("id")) {
+                case "chant_108":
+                    $('#chant_num').val(108);
+                    Dom.chantNum.hide();
+                    break;
+                case "chant_1080":
+                    $('#chant_num').val(1080);
+                    Dom.chantNum.hide();
+                    break;
+                case "chant_diy":
+                    $('#chant_num').val(108);
+                    Dom.chantNum.show();
+                    break;
+                case "chant_forever":
+                    Dom.chantNum.hide();
+                    $('#chant_num').val(-1);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function swicthChantSpeed() {
+            switch ($("input[name=chant_speed]:checked").attr("id")) {
+                case "chant_slow":
+                    Dom.audio.src=slowChant;
+                    break;
+                case "chant_fast":
+                    Dom.audio.src=fastChant;
+                    break;
+                default:
+                    break;
+            }
+        }
+
 
         total = parseInt('{$total}');
         Dom.total.html(total);
@@ -92,28 +156,47 @@
             });
 
             Dom.audio.addEventListener('ended',function(){
-                Dom.audio.play();
-                addOne();
+                if( chantNum != 0 ){
+                    chantNum -= 1;
+                    Dom.audio.play();
+                    addOne();
+                }else{
+                    $('#start_chant').val('开始念诵');
+                    alert("念诵完成！");
+                }
             });
 
             $('#follow_guru').click(function(){
-                autoChant = !autoChant;
-                if( autoChant ){
-                    $('#follow_guru').val('||');
-                    Dom.audio.load();
-                    Dom.audio.play();
+                if( Dom.chantBox.css('display')=='none' ){
+                    Dom.chantBox.show();
                 }else{
-                    $('#follow_guru').val('跟师父一起念');
-                    Dom.audio.pause();
+                    Dom.chantBox.hide();
                 }
+            });
 
-                var audio = document.createElement("audio");
-                audio.src = "piano/3C.mp3";
-                audio.addEventListener('ended', function () {
-                    // Wait 500 milliseconds before next loop
-                    setTimeout(function () { audio.play(); }, 500);
-                }, false);
-                audio.play();
+            $("input[name=chant_type]").click(function(){
+                swicthChantType();
+            });
+
+            $("input[name=chant_speed]").click(function(){
+                swicthChantSpeed();
+            });
+
+            $('#start_chant').click(function(){
+                autoChant = !autoChant;
+                chantNum = $('#chant_num').val();
+                if( chantNum == "" || chantNum == null || isNaN(chantNum) ){
+                    alert("请输入有效数目！");
+                }else{
+                    if( autoChant ){
+                        $('#start_chant').val('停止念诵');
+                        Dom.audio.load();
+                        Dom.audio.play();
+                    }else{
+                        $('#start_chant').val('开始念诵');
+                        Dom.audio.pause();
+                    }
+                }
             });
 
             $('#reset').click(function(){
