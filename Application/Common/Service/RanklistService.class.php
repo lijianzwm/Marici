@@ -12,17 +12,14 @@ namespace Common\Service;
 class RanklistService{
     public static function getTodayRanklist(){
         $ranklist = self::getRedisTodayRanklist();
-        if( $ranklist ){
-            return $ranklist;
-        }else{
+        if (!$ranklist) {
             $ranklist = self::getMysqlTodayRanklist();
-            if( $ranklist ){
-                self::setRedisTodayRanklist($ranklist);
-                return $ranklist;
-            }else{
+            if (!$ranklist) {
                 return null;
             }
+            self::setRedisTodayRanklist($ranklist);
         }
+        return $ranklist;
     }
 
     /**
@@ -48,7 +45,7 @@ class RanklistService{
         $userTable = C("DB_PREFIX")."user";
         $dayCountTable = C("DB_PREFIX")."day_count";
         $ranklist = M()->table("$userTable user, $dayCountTable count")->
-                where('user.id = count.userid')->
+                where("user.id = count.userid and count.num > '0' and  count.today_date='$todayDate'")->
                 field('user.id as userid, user.showname as name, count.num as num')->
                 order('count.num desc' )->select();
         return $ranklist;
@@ -58,5 +55,32 @@ class RanklistService{
         $key = "ranklist-".DateService::getStrDate();
         CacheService::set($key,$ranklist,C("TODAY_RANKLIST_EXPIRE"));
     }
+
+    public static function getTotalRanklist(){
+        $ranklist = self::getRedisTotalRanklist();
+        if( !$ranklist){
+            $ranklist = self::getMysqlTotalRanklist();
+            if( !$ranklist ){
+                return null;
+            }
+            self::setRedisTotalRanklist($ranklist);
+        }
+        return $ranklist;
+    }
+
+    private static function getRedisTotalRanklist(){
+        $key = "total-ranklist";
+        return  CacheService::get($key);
+    }
+
+    private static function getMysqlTotalRanklist(){
+        return M("user")->field("id as userid, showname as name, total as num")->where("total > 0")->order("total desc")->select();
+    }
+
+    private static function setRedisTotalRanklist($ranklist){
+        $key = "total-ranklist";
+        CacheService::set($key,$ranklist,C("TOTAL_RANKLIST_EXPIRE"));
+    }
+
 
 }

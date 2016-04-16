@@ -47,11 +47,16 @@
             text-align:center;
         }
 
+        .menu{
+            font-size:20px;
+        }
+
     </style>
 </head>
 <body>
+<div class="menu"><a href="{:U('Ranklist/todayRanklist')}">今日排行</a>&nbsp;&nbsp;<a href="{:U('Ranklist/totalRanklist')}">全部排行</a></div>
 <div class="title">{$title}</div>
-<div class="sub-title">(排行榜每{:C('TODAY_RANKLIST_EXPIRE')}秒更新一次)</div>
+<div class="sub-title">({$title}每{$refreshTime}秒更新一次)</div>
 <div class="rank-wrapper">
     <div class="rank-title">
         <div class="rank-title-elem">排名</div>

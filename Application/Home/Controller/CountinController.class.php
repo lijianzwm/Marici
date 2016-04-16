@@ -13,6 +13,11 @@ use Common\Service\CountinService;
 class CountinController extends CommonController{
 
     public function addNum(){
+        $userid = session("userid");
+        $todayNum = CountinService::getTodayNumById($userid);
+        $total = CountinService::getTotalNumById($userid);
+        $this->assign("todayNum", $todayNum);
+        $this->assign("total", $total);
         $this->display();
     }
 

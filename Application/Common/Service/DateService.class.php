@@ -16,6 +16,10 @@ class DateService{
         return strval(date('y-m-d',time()));
     }
 
+    public static function getStrMonthDate(){
+        return strval(date('m-d',time()));
+    }
+
     public static function getCrrentTimeHis(){
         return date('H:i:s', time());
     }

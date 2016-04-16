@@ -53,7 +53,7 @@ class CacheService{
      * @return string
      */
     public static function getTodayUserRedisKey( $userid ){
-        return $userid."-".DateService::getStrDate();
+        return "num-".DateService::getStrMonthDate()."-".$userid;
     }
 
     /**

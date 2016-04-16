@@ -7,6 +7,8 @@
 </head>
 <body>
 <div class="user-box-title">上报今日持诵数目</div>
+<div>总数：{$total}</div>
+<div>今日：{$todayNum}</div>
 <form action="{:U('Countin/addNumHandler')}" method="post">
     <div class="user-box-item">
         <div>数目：<input name="num" id="num"/></div>
