@@ -44,4 +44,13 @@ class RanklistController extends Controller{
         $this->display("ranklist");
     }
 
+    public function curMonthRanklist(){
+        $ranklist = RanklistService::getCurMonthRanklist();
+        $this->assign("title","本月排行榜");
+        $this->assign("refreshTime", C("CUR_MONTH_RANKLIST_EXPIRE"));
+        $this->assign("yourUserid", session("userid"));
+        $this->assign("ranklist", $ranklist);
+        $this->display("ranklist");
+    }
+
 }

@@ -4,14 +4,43 @@
     <meta charset="UTF-8">
     <title>报数</title>
     <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <style>
+        .title{
+            font-size:40px;
+        }
+
+        .sub-title{
+            font-size:20px;
+            padding-bottom:10px;
+        }
+
+        .num{
+            font-size:25px;
+        }
+
+        .num-box{
+            font-size:25px;
+            margin-top:10px;
+            margin-bottom:10px;
+        }
+
+        .num-input{
+            height:30px;
+            font-size:25px;
+            text-align:center;
+            width:120px;
+        }
+
+    </style>
 </head>
 <body>
-<div class="user-box-title">上报今日持诵数目</div>
-<div>总数：{$total}</div>
-<div>今日：{$todayNum}</div>
+<div class="title">上报今日持诵数目</div>
+<div class="sub-title">（建议随修随报）</div>
+<div class="num">总数：{$total}</div>
+<div class="num" >今日：{$todayNum}</div>
 <form action="{:U('Countin/addNumHandler')}" method="post">
-    <div class="user-box-item">
-        <div>数目：<input name="num" id="num"/></div>
+    <div class="num-box">
+        <div>数目：<input name="num" id="num" class="num-input"/></div>
     </div>
     <div class="user-box-item"><input class="common-button" type="submit" value="报数"/></div>
 </form>

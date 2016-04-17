@@ -53,4 +53,10 @@ class RanklistService{
         return $ranklist;
     }
 
+    public static function getCurMonthRanklist(){
+        //TODO 添加redis缓存
+        $ranklist = MysqlService::getMysqlCurMonthRanklist();
+        return $ranklist;
+    }
+
 }

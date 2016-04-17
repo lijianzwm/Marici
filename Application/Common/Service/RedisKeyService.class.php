@@ -35,4 +35,8 @@ class RedisKeyService{
         return "ranklist-".$date;
     }
 
+    public static function getCurMonthRanklistKey($yearMonth){
+        return "ranklist-".$yearMonth;
+    }
+
 }
