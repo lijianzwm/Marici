@@ -53,16 +53,10 @@ class CountinService{
         $num = CountinService::getRedisTodayNumById($userid);
         if( !$num ){
             $num = CountinService::getMysqlTodayNumById($userid);
-            if( $num ){
-                $todayKey = CacheService::getTodayUserRedisKey($userid);
-                CacheService::set($todayKey,$num,C("TODAY_KEY_EXPIRE"));
-                return $num;
-            }else{
-                return false;
-            }
-        }else{
-            return $num;
+            $todayKey = CacheService::getTodayUserRedisKey($userid);
+            CacheService::set($todayKey, $num, C("TODAY_KEY_EXPIRE"));
         }
+        return $num;
     }
 
     public static function getRedisTodayNumById($userid){
@@ -72,11 +66,12 @@ class CountinService{
 
     public static function getMysqlTodayNumById($userid){
         $todayDate = DateService::getStrDate();
-        $count = M("day_count")->where("userid='$userid', today_date='$todayDate'")->find();
+        $count = M("day_count")->where("userid='$userid' and today_date='$todayDate'")->find();
         if( $count ){
             return $count['num'];
         }else{
-            return null;
+            CountinService::insertMysqlTodayNum($userid, 0);
+            return 0;
         }
     }
 

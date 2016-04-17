@@ -70,12 +70,17 @@
         }
 
         .countdown-wrapper{
-            height:400px;
+            padding-top:70px;
+            margin-bottom:auto;
+            height:240px;
+            font-size:50px;
         }
 
         .remain-seconds{
             margin:auto;
-            font-size:50px;
+            font-size:70px;
+            display:inline-block;
+            color:#ff0000;
         }
 
 
@@ -89,13 +94,12 @@
 </div>
 <div>
     <div id="video_wrapper" class="video-wrapper">
-        <video id="video" width="432" height="240" controls="controls">
+        <video id="video" width="432" height="240" controls="controls" preload="preload">
             <source src="{:C('GX_VIDEO')}" type="video/mp4">
         </video>
     </div>
     <div id="countdown_wrapper" class="countdown-wrapper hide">
-        <div>倒计时：</div>
-        <div id="remain_seconds" class="remain-seconds"></div>
+        <div>距共修开始还有&nbsp;<div id="remain_seconds" class="remain-seconds"></div>&nbsp;秒</div>
     </div>
 </div>
 
@@ -156,18 +160,6 @@
 
     })();
 
-
-//    video.currentTime = 0;
-//    var i = setInterval(function() {
-//        if(video.readyState > 0) {
-//            var minutes = parseInt(video.duration / 60, 10);
-//            var seconds = video.duration % 60;
-//            // (此处可以添加代码，将分钟，秒数显示到需要的地方)
-//            // ...
-//            // 执行到这里，就将循环定时器清除。
-//            clearInterval(i);
-//        }
-//    }, 200);
 </script>
 
 </body>

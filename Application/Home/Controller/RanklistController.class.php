@@ -19,7 +19,17 @@ class RanklistController extends Controller{
 
     public function todayRanklist(){
         $ranklist = RanklistService::getTodayRanklist();
-        $this->assign("title", "今日排行");
+        $this->assign("title", "今日排行榜");
+        $this->assign("yourUserid", session("userid"));
+        $this->assign("refreshTime", C("TODAY_RANKLIST_EXPIRE"));
+        $this->assign("ranklist", $ranklist);
+        $this->display("ranklist");
+    }
+
+    public function totalRanklist(){
+        $ranklist = RanklistService::getTotalRanklist();
+        $this->assign("title","总排行榜");
+        $this->assign("refreshTime", C("TOTAL_RANKLIST_EXPIRE"));
         $this->assign("yourUserid", session("userid"));
         $this->assign("ranklist", $ranklist);
         $this->display("ranklist");
