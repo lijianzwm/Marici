@@ -16,7 +16,7 @@ class CountinController extends Controller{
     public function addNum(){
         $num = I("num");
         $id = I("userid");
-        if( CountinService::addNum($id,$num) ){
+        if( CountinService::addTodayNum($id,$num) ){
             $ret['error_code'] = 0;
         }else{
             $ret['error_code'] = 1;
@@ -26,8 +26,8 @@ class CountinController extends Controller{
 
     public function getTotalNum(){
         $id = I("userid");
-        $total = CountinService::getTotalNumById($id);
-        if( $total != -1 ){
+        $total = CountinService::getUserTotalNumById($id);
+        if( $total != null ){
             $ret['error_code'] = 0;
             $ret['num'] = $total;
         }else{

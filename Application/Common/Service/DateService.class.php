@@ -16,7 +16,11 @@ class DateService{
         return strval(date('y-m-d',time()));
     }
 
-    public static function getStrMonthDate(){
+    public static function getStrYesterdayDate(){
+        return strval(date("Y-m-d",strtotime("-1 day")));
+    }
+
+    public static function getStrMonthDay(){
         return strval(date('m-d',time()));
     }
 
