@@ -87,11 +87,8 @@
     </style>
 </head>
 <body>
-<div id="top_bar" class="top-bar">
-    <div><img src="__PUBLIC__/Image/logo.jpg"/></div>
-    <div id="title" class="title">{:C('WEBSITE_TITLE')}</div>
-    <div id="sub_title" class="sub-title">（内部测试版）</div>
-</div>
+<div id="title" class="title">{:C('WEBSITE_TITLE')}</div>
+<div id="sub_title" class="sub-title">（内部测试版）</div>
 <div>
     <div id="video_wrapper" class="video-wrapper">
         <video id="video" width="432" height="240" controls="controls" preload="preload">
@@ -115,7 +112,6 @@
     <else />
         <div class="menu-button"><a href="{:U('Login/userCenter')}">个人中心</a></div>
     </if>
-
 </div>
 <script src="__PUBLIC__/lib/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">

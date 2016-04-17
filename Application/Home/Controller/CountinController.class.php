@@ -41,7 +41,9 @@ class CountinController extends CommonController{
 
     public function counter(){
         $total = CountinService::getUserTotalNumById(session("userid"));
+        $todayNum = CountinService::getTodayNumById(session("userid"));
         $this->assign("total", $total);
+        $this->assign("todayNum", $todayNum);
         $this->display();
     }
 

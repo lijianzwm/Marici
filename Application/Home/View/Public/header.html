@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{:C('WEBSITE_TITLE')}</title>
+</head>
+<body>
+<div id="top_bar" class="top-bar">
+    <div><img src="__PUBLIC__/Image/logo.jpg" onclick="toHomepage()"/></div>
+</div>
+<script type="text/javascript">
+    function toHomepage(){
+        window.location.href="{:U('/Home/Index')}";
+    }
+</script>
+</body>
+</html>
