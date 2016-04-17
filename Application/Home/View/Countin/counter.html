@@ -12,12 +12,15 @@
             margin-bottom:20px;
         }
 
-        .total-num{
-            display:inline-block;
+        .today-num{
             margin-bottom:10px;
         }
 
         .total{
+            display:inline-block;
+        }
+
+        .today{
             display:inline-block;
         }
 
@@ -30,8 +33,9 @@
 <body>
 <div class="user-box-title" >在线持咒</div>
 <div>
-    <div>按“键盘任意键”或点击“数字按钮”均可进行计数，持咒结束后点击同步到服务器，系统就会自动将您本次持诵数目上报到服务器</div>
-    <div class="total-num">您当前总共持诵数目为：<div id="total" class="total"></div></div>
+    <div>点击“数字按钮”均可进行计数，持咒结束后点击同步到服务器，系统就会自动将您本次持诵数目上报到服务器</div>
+    <div class="total-num">总共持诵数目为：<div id="total" class="total"></div></div>
+    <div class="today-num">本日持诵数目为：<div id="today" class="today"></div></div>
     <div><input type="button" name="counter" id="counter" class="counter-button common-button" ></div>
     <div>
         <audio id="mlztsz" src="__PUBLIC__/Audio/{:C('MANTRA_SLOW')}" ></audio>
@@ -85,6 +89,7 @@
             counter : $('#counter'),
             sync : $('#sync'),
             total :$('#total'),
+            today:$('#today'),
             chantBox : $('#chant_box'),
             chantNum:$('#chant_num'),
             audio: document.getElementById("mlztsz")
@@ -137,8 +142,11 @@
         }
 
 
+
         total = parseInt('{$total}');
+        todayNum = parseInt('{$todayNum}');
         Dom.total.html(total);
+        Dom.today.html(todayNum);
 
         eventHandler();
         function eventHandler(){
@@ -149,7 +157,7 @@
                 Util.StorageSetter("num",num);
             }
 
-            document.onkeydown = addOne;
+//            document.onkeydown = addOne;
 
             Dom.counter.click(function(){
                 addOne();
@@ -224,7 +232,9 @@
                             Dom.counter.val(0);
                             Util.StorageSetter("num",0);
                             total += num;
+                            todayNum += num;
                             Dom.total.html(total);
+                            Dom.today.html(todayNum);
                             num = 0;
                             //TODO 在屏幕上显示3秒钟提示框
                             alert("同步成功！");
