@@ -35,4 +35,13 @@ class RanklistController extends Controller{
         $this->display("ranklist");
     }
 
+    public function yesterdayRanklist(){
+        $ranklist = RanklistService::getYesterdayRanklist();
+        $this->assign("title","昨日排行榜");
+        $this->assign("refreshTime", C("SOMEDAY_RANKLIST_EXPIRE"));
+        $this->assign("yourUserid", session("userid"));
+        $this->assign("ranklist", $ranklist);
+        $this->display("ranklist");
+    }
+
 }

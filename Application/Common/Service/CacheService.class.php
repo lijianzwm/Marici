@@ -45,24 +45,4 @@ class CacheService{
         return S($key);
     }
 
-
-
-    /**
-     * 获取当日用户redis缓存数据的key，key由id_日期构成
-     * @param $userid
-     * @return string
-     */
-    public static function getTodayUserRedisKey( $userid ){
-        return "num-".DateService::getStrMonthDate()."-".$userid;
-    }
-
-    /**
-     * 获取该用户的总共计数
-     * @param $userid
-     * @return string
-     */
-    public static function getTotalNumUserRedisKey( $userid ){
-        return "total-".$userid;
-    }
-
 }
