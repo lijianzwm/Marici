@@ -32,6 +32,18 @@ class DateService{
         return date('y-m-d H:i:s', time());
     }
 
+    public static function getCurrentYearMonth(){
+        return date('Y-m',time());
+    }
+
+    public static function getCurrentYearMonthDay(){
+        return date('Y-m-d',time());
+    }
+
+    public static function getCurrentYearMonthFirstday(){
+        return date('Y-m',time())."-01";
+    }
+
     public static function timeDistance($time1, $time2){
         $date1 = strtotime($time1);
         $date2 = strtotime($time2);

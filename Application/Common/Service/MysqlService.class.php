@@ -12,18 +12,30 @@ namespace Common\Service;
 class MysqlService{
 
     /**
-     * 获取某日排行榜，若没有排行榜，返回array(0) {}
+     * 获取当日排行榜，如果没有，返回array(0) {}
+     * @return mixed
+     */
+    public static function getMysqlTodayRanklist(){
+        $todayDate = DateService::getStrDate();
+        return self::generateMysqlSomeDayRanklist($todayDate);
+    }
+
+    /**
+     * 获取某天的排行榜，如果这个排行榜不存在，就生成一个，存到month_ranklist表中，如果排行榜为空，返回array(0) {}
      * @param $date
      * @return mixed
      */
-    public static function getMysqlSomeDayRanklist($date){
-        $userTable = C("DB_PREFIX")."user";
-        $dayCountTable = C("DB_PREFIX")."day_count";
-        $ranklist = M()->table("$userTable user, $dayCountTable count")->
-        where("user.id = count.userid and count.num > '0' and  count.today_date='$date'")->
-        field('user.id as userid, user.showname as name, count.num as num')->
-        order('count.num desc' )->select();
-        return $ranklist;
+    public static function getMysqlSomedayRanklist($date){
+        $rankItem = M("day_ranklist")->where("date='$date'")->find();
+        if( $rankItem ){
+            return json_decode($rankItem['ranklist'], true);
+        }else{
+            $ranklist = self::generateMysqlSomeDayRanklist($date);
+            $rankItem['ranklist'] = json_encode($ranklist);
+            $rankItem['date'] = $date;
+            M("day_ranklist")->add($rankItem);
+            return $ranklist;
+        }
     }
 
     /**
@@ -35,12 +47,85 @@ class MysqlService{
     }
 
     /**
-     * 获取当日排行榜，如果没有，返回array(0) {}
+     * 生成某日排行榜，若生成的排行榜为空，返回array(0) {}
+     * @param $date
      * @return mixed
      */
-    public static function getMysqlTodayRanklist(){
-        $todayDate = DateService::getStrDate();
-        return self::getMysqlSomeDayRanklist($todayDate);
+    public static function generateMysqlSomeDayRanklist($date){
+        $userTable = C("DB_PREFIX")."user";
+        $dayCountTable = C("DB_PREFIX")."day_count";
+        $ranklist = M()->table("$userTable user, $dayCountTable count")->
+        where("user.id = count.userid and count.num > '0' and  count.today_date='$date'")->
+        field('user.id as userid, user.showname as name, count.num as num')->
+        order('count.num desc' )->select();
+        return $ranklist;
+    }
+
+    /**
+     * 获取当月排行榜
+     * @return mixed
+     */
+    public static function getMysqlCurMonthRanklist(){
+        $yearMonth = DateService::getCurrentYearMonth();
+        $ranklist = self::generateMysqlMonthRanklist($yearMonth);
+        $rankItem['yearmonth'] = $yearMonth;
+        $rankItem['ranklist'] = json_encode($ranklist);
+        M("month_ranklist")->add($rankItem);
+        return $ranklist;
+    }
+
+    /**
+     * 获取某月排行榜
+     * @return mixed
+     */
+    public static function getMysqlMonthRanklist($yearMonth){
+        $rankItem = M("month_ranklist")->where("yearmonth='$yearMonth'")->find();
+        if( $rankItem ){
+            return json_decode($rankItem['ranklist'],true);
+        }else{
+            $ranklist = self::generateMysqlMonthRanklist($yearMonth);
+            $rankItem['yearmonth'] = $yearMonth;
+            $rankItem['ranklist'] = json_encode($ranklist);
+            M("month_ranklist")->add($rankItem);
+            return $ranklist;
+        }
+    }
+
+    /**
+     * 生成月排行榜，传入“2016-04”格式的年月字符串，返回排行榜，若排行榜为空，则返回array(0) {}
+     * @param $yearMonth
+     * @return mixed
+     */
+    public static function generateMysqlMonthRanklist($yearMonth){
+        $begDate = $yearMonth."-01";
+        $endDate = $yearMonth."-31";
+        $userTable = C("DB_PREFIX")."user";
+        $dayCountTable = C("DB_PREFIX")."day_count";
+        $sql = "SELECT
+                    USER .id AS userid,
+                    USER .showname AS NAME,
+                    count.num AS num
+                FROM
+                    $userTable USER,
+                    (
+                        SELECT
+                            userid,
+                            sum(num) AS num
+                        FROM
+                            $dayCountTable
+                        WHERE
+                            today_date >= '$begDate'
+                        AND today_date <= '$endDate'
+                        GROUP BY
+                            userid
+                    ) count
+                WHERE
+                    USER .id = count.userid
+                AND count.num > '0'
+                ORDER BY
+                    count.num DESC";
+
+        return M()->query($sql);
     }
 
     /**

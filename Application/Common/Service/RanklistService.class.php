@@ -35,6 +35,10 @@ class RanklistService{
         return $ranklist;
     }
 
+    /**
+     * 获取昨日排行榜
+     * @return mixed
+     */
     public static function getYesterdayRanklist(){
         $yesterday = DateService::getStrYesterdayDate();
         return self::getSomedayRanklist($yesterday);
@@ -49,6 +53,31 @@ class RanklistService{
         $ranklist = RedisService::getRedisSomedayRanklist($date);
         if( $ranklist == false ){
             $ranklist = RedisService::cachingSomedayRanklist($date);
+        }
+        return $ranklist;
+    }
+
+    /**
+     * 获取当月排行榜
+     * @return mixed
+     */
+    public static function getCurMonthRanklist(){
+        $ranklist = RedisService::getRedisCurMonthRanklist();
+        if( $ranklist == false ){
+            $ranklist = RedisService::cachingCurMonthRanklist();
+        }
+        return $ranklist;
+    }
+
+    /**
+     * 获取某月排行
+     * @param $yearMonth
+     * @return mixed
+     */
+    public static function getMonthRanklist($yearMonth){
+        $ranklist = RedisService::getRedisMonthRanklist($yearMonth);
+        if( $ranklist == false ){
+            $ranklist = RedisService::cachingMonthRanklist($yearMonth);
         }
         return $ranklist;
     }
