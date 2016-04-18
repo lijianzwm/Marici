@@ -29,33 +29,53 @@ class CountinService{
      * @param $userid
      * @return mixed
      */
-    public static function getTodayNumById($userid){
+    public static function getUserTodayNumById($userid){
         $num = RedisService::getRedisUserTodayNumById($userid);
         if( $num == false ){
             DebugService::displayLog("getTodayNumById : not cached");
-            $num = RedisService::cachingUserTodayNum($userid);
+            $num = MysqlService::getMysqlTodayNumById($userid);
         }
-        return $num;
+        if( $num == null ){
+            return 0;
+        }else{
+            return $num;
+        }
     }
 
 
+    /**
+     * 添加本日数目，用户不存在返回false
+     * @param $userid
+     * @param $num
+     * @return bool
+     */
     public static function addTodayNum($userid, $num ){
         //TODO 判断是否添加计数成功
+
         if ( !MysqlService::isUserExist($userid)) {
             return false;
         }
         if( CountinService::isTodayFirstCommit($userid)){//如果是当天第一次报数
+            DebugService::displayLog("当前报数是当天第一次报数");
             MysqlService::insertMysqlTodayNum($userid, $num);
-            RedisService::cachingUserTodayNum($userid);
         }else{
+            DebugService::displayLog("当前报数不是当天第一次报数");
             MysqlService::addMysqlTodayNum($userid, $num);
-            RedisService::addRedisTodayNum($userid, $num);
         }
+        self::addTotalNum($num);
+        RedisService::addRedisTodayNum($userid, $num);
         RedisService::addRedisUserTotalNum($userid,$num);
-        MysqlService::addMysqlTotalNum($userid,$num);
+        MysqlService::addMysqlUserTotalNum($userid,$num);
         return true;
     }
 
+    private static function addTotalNum($num){
+        $totalNum = RedisService::getTotalNum();
+        if( $totalNum == false ){
+            $totalNum = RedisService::cachingTotalNum();
+        }
+        RedisService::updateTotalNum($totalNum + $num);
+    }
 
     /**
      * 获取某一天的共修总数（可以是今天），如果日期非法，返回null
@@ -75,8 +95,22 @@ class CountinService{
         return $num;
     }
 
+    /**
+     * 获取某月共修总数（可以是本月），日期非法，返回null
+     * @param $yearMonth
+     * @return int|mixed|null
+     */
     public static function getMonthTotalNum($yearMonth){
-
+        $curYearMonth = DateService::getCurrentYearMonth();
+        if ($curYearMonth < $yearMonth) {
+            return null;
+        }
+        $num = RedisService::getRedisMonthTotalNum($yearMonth);
+        if( $num == false ){
+            DebugService::displayLog("month total num $yearMonth : not cached!");
+            $num = RedisService::cachingMonthTotalNum($yearMonth);
+        }
+        return $num;
     }
 
     /**
@@ -96,6 +130,14 @@ class CountinService{
         }else{
             return false;
         }
+    }
+
+    public static function getRanklistTotalNum($ranklist){
+        $sum = 0;
+        foreach($ranklist as $r ){
+            $sum += $r['num'];
+        }
+        return $sum;
     }
 
 }

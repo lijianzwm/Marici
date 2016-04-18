@@ -47,4 +47,12 @@ class RedisKeyService{
         return "total-".$date;
     }
 
+    public static function getTotalNumKey(){
+        return "total-num";
+    }
+
+    public static function getMonthTotalNumKey($yearMonth){
+        return "total-" . $yearMonth;
+    }
+
 }
