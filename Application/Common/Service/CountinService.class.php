@@ -32,6 +32,7 @@ class CountinService{
     public static function getTodayNumById($userid){
         $num = RedisService::getRedisUserTodayNumById($userid);
         if( $num == false ){
+            DebugService::displayLog("getTodayNumById : not cached");
             $num = RedisService::cachingUserTodayNum($userid);
         }
         return $num;
@@ -55,9 +56,33 @@ class CountinService{
         return true;
     }
 
+    public static function getDayTotalNum($date){
+        $num = RedisService::getRedisDayTotalNum($date);
+        if( $num == false ){
+            DebugService::displayLog("total num $date: not cached");
+            $num = RedisService::cachingDayTotalNum($date);
+        }
+        return $num;
+    }
+
+    public static function getMonthTotalNum($yearMonth){
+
+    }
+
+    /**
+     *
+     */
+    public static function getAllUserTotalNum(){
+
+    }
+
     public static function isTodayFirstCommit( $userid ){
         if( !RedisService::getRedisUserTodayNumById($userid)){
-            return true;
+            if( MysqlService::getMysqlTodayNumById($userid) == null){
+                return true;
+            }else{
+                return false;
+            }
         }else{
             return false;
         }
