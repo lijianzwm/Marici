@@ -9,6 +9,7 @@
 namespace Home\Controller;
 
 
+use Common\Service\CountinService;
 use Common\Service\DateService;
 use Think\Controller;
 use Common\Service\RanklistService;
@@ -32,9 +33,11 @@ class RanklistController extends Controller{
     public function dayRanklist(){
         $date = I("date");
         //TODO 校验一下传过来的数据是否合法
+        $total = CountinService::getDayTotalNum($date);
         $ranklist = RanklistService::getSomedayRanklist($date);
         $this->assign("title", $date."排行榜");
         $this->assign("refreshTime", C("SOMEDAY_RANKLIST_EXPIRE"));
+        $this->assign("total", $total);
         $this->assign("ranklist", $ranklist);
         $this->display("ranklist");
     }
