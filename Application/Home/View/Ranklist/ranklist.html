@@ -78,15 +78,15 @@
     <a href="{:U('Ranklist/totalRanklist')}">查询总榜</a>&nbsp;&nbsp;
 </div>
 <div id="query_day_box" class="query-box hide">
-    <a href="{:U('Ranklist/yesterdayRanklist')}">查昨日排行</a>&nbsp;&nbsp;
-    <a href="{:U('Ranklist/todayRanklist')}">查今日排行</a>&nbsp;&nbsp;
+    <a href="{:U('Ranklist/yesterdayRanklist')}">查昨日榜</a>&nbsp;&nbsp;
+    <a href="{:U('Ranklist/todayRanklist')}">查今日榜</a>&nbsp;&nbsp;
     <form action="{:U('Ranklist/dayRanklist')}" method="post">
         <input type="date" name="date" value="{$yearMonthDay}"/>
         <input type="submit" class="day-button" value="查询日榜"/>
     </form>
 </div>
 <div id="query_month_box" class="query-box hide">
-    <a href="{:U('Ranklist/curMonthRanklist')}">查本月排行</a>&nbsp;&nbsp;
+    <a href="{:U('Ranklist/curMonthRanklist')}">查本月榜</a>&nbsp;&nbsp;
     <form action="{:U('Ranklist/monthRanklist')}" method="post">
         <input type="month" name="month" value="{$monthDay}"/>
         <input type="submit" class="month-button" value="查询月榜"/>
