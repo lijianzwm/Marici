@@ -119,6 +119,22 @@ class RedisService{
     }
 
     /**
+     * 缓存某一天（包括今天）的共修总数
+     * @param $date
+     * @return int
+     */
+    public static function cachingDayTotalNum($date){
+        $num = MysqlService::getMysqlDayTotalNum($date);
+        if( $num == -1 ){
+            $num = MysqlService::generateMysqlDayTotalNum($date);
+        }
+        DebugService::displayLog("$num");
+        $key = RedisKeyService::getDayTotalNumKey($date);
+        self::set($key, $num, C("DAY_TOTAL_NUM_EXPIRE"));
+        return $num;
+    }
+
+    /**
      * 获取缓存中的总排行，如果没有，返回false
      * @return mixed
      */
@@ -188,6 +204,11 @@ class RedisService{
             $currentNum = self::cachingUserTotalNum($userid);
         }
         self::set($totalKey,$currentNum+$num, C("TODAY_KEY_EXPIRE"));
+    }
+
+    public static function getRedisDayTotalNum($date){
+        $key = RedisKeyService::getDayTotalNumKey($date);
+        return self::get($key);
     }
 
 }

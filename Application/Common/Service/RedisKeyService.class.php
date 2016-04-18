@@ -16,11 +16,11 @@ namespace Common\Service;
 class RedisKeyService{
 
     public static function getUserTodayNumKey($userid ){
-        return "num-".DateService::getStrMonthDay()."-".$userid;
+        return "today-num-".DateService::getStrMonthDay()."-".$userid;
     }
 
     public static function getUserTotalNumKey($userid ){
-        return "total-".$userid;
+        return "user-total-num-".$userid;
     }
 
     public static function getTodayRanklistKey(){
@@ -41,6 +41,10 @@ class RedisKeyService{
 
     public static function getMonthRanklistKey($yearMonth){
         return "ranklist-".$yearMonth;
+    }
+
+    public static function getDayTotalNumKey($date){
+        return "total-".$date;
     }
 
 }

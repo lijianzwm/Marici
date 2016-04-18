@@ -56,7 +56,17 @@ class CountinService{
         return true;
     }
 
+
+    /**
+     * 获取某一天的共修总数（可以是今天），如果日期非法，返回null
+     * @param $date : 2016-04-18
+     * @return int|mixed|null
+     */
     public static function getDayTotalNum($date){
+        $today = DateService::getCurrentYearMonthDay();
+        if( $date > $today ){
+            return null;
+        }
         $num = RedisService::getRedisDayTotalNum($date);
         if( $num == false ){
             DebugService::displayLog("total num $date: not cached");
@@ -77,7 +87,7 @@ class CountinService{
     }
 
     public static function isTodayFirstCommit( $userid ){
-        if( !RedisService::getRedisUserTodayNumById($userid)){
+        if( RedisService::getRedisUserTodayNumById($userid) == false){
             if( MysqlService::getMysqlTodayNumById($userid) == null){
                 return true;
             }else{

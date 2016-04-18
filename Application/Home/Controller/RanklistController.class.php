@@ -24,7 +24,10 @@ class RanklistController extends Controller{
 
     public function todayRanklist(){
         $ranklist = RanklistService::getTodayRanklist();
+        $todayDate = DateService::getCurrentYearMonthDay();
+        $total = CountinService::getDayTotalNum($todayDate);
         $this->assign("title", "今日排行榜");
+        $this->assign("total", $total);
         $this->assign("refreshTime", C("TODAY_RANKLIST_EXPIRE"));
         $this->assign("ranklist", $ranklist);
         $this->display("ranklist");
