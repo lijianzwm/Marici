@@ -21,7 +21,7 @@ class MysqlService{
     }
 
     /**
-     * 获取某天的排行榜，如果这个排行榜不存在，就生成一个，如果排行榜为空，返回array(0) {}
+     * 获取某天的排行榜，如果这个排行榜不存在，就生成一个，存到month_ranklist表中，如果排行榜为空，返回array(0) {}
      * @param $date
      * @return mixed
      */
@@ -67,6 +67,18 @@ class MysqlService{
      */
     public static function getMysqlCurMonthRanklist(){
         $yearMonth = DateService::getCurrentYearMonth();
+        $ranklist = self::generateMysqlMonthRanklist($yearMonth);
+        $rankItem['yearmonth'] = $yearMonth;
+        $rankItem['ranklist'] = json_encode($ranklist);
+        M("month_ranklist")->add($rankItem);
+        return $ranklist;
+    }
+
+    /**
+     * 获取某月排行榜
+     * @return mixed
+     */
+    public static function getMysqlMonthRanklist($yearMonth){
         $rankItem = M("month_ranklist")->where("yearmonth='$yearMonth'")->find();
         if( $rankItem ){
             return json_decode($rankItem['ranklist'],true);

@@ -96,6 +96,29 @@ class RedisService{
     }
 
     /**
+     * 缓存当月排行榜,如果当月排行榜为空，则存入array(0) {}
+     * @return mixed
+     */
+    public static function cachingCurMonthRanklist(){
+        $ranklist = MysqlService::getMysqlCurMonthRanklist();
+        $key = RedisKeyService::getCurMonthRanklistKey();
+        self::set($key, $ranklist,C("CUR_MONTH_RANKLIST_EXPIRE"));
+        return $ranklist;
+    }
+
+    /**
+     * 缓存某月排行榜，如果某月排行榜为空，存入array(0) {}
+     * @param $yearMonth
+     * @return mixed
+     */
+    public static function cachingMonthRanklist($yearMonth){
+        $ranklist = MysqlService::getMysqlMonthRanklist($yearMonth);
+        $key = RedisKeyService::getMonthRanklistKey($yearMonth);
+        self::set($key, $ranklist,C("MONTH_RANKLIST_EXPIRE"));
+        return $ranklist;
+    }
+
+    /**
      * 获取缓存中的总排行，如果没有，返回false
      * @return mixed
      */
@@ -116,6 +139,16 @@ class RedisService{
     public static function getRedisSomeDayRanklist($date){
         $key = RedisKeyService::getSomedayRanklistKey($date);
         return  self::get($key);
+    }
+
+    public static function getRedisCurMonthRanklist(){
+        $key = RedisKeyService::getCurMonthRanklistKey();
+        return self::get($key);
+    }
+
+    public static function getRedisMonthRanklist($yearMonth){
+        $key = RedisKeyService::getMonthRanklistKey($yearMonth);
+        return self::get($key);
     }
 
     public static function getRedisUserTodayNumById($userid){

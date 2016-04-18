@@ -36,6 +36,10 @@ class DateService{
         return date('Y-m',time());
     }
 
+    public static function getCurrentYearMonthDay(){
+        return date('Y-m-d',time());
+    }
+
     public static function getCurrentYearMonthFirstday(){
         return date('Y-m',time())."-01";
     }
