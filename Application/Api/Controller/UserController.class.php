@@ -30,7 +30,7 @@ class UserController extends Controller{
             $ret['msg'] = "更新用户信息成功！";
         }else{
             $ret['error_code'] = 1;
-            $ret['msg'] = "更新用户信息失败！";
+            $ret['msg'] = "用户信息未被修改！";
         }
         echo json_encode($ret);
     }

@@ -31,6 +31,7 @@ class MysqlService{
             return json_decode($rankItem['ranklist'], true);
         }else{
             $ranklist = self::generateMysqlSomeDayRanklist($date);
+            $rankItem['total'] = CountinService::getRanklistTotalNum($ranklist);
             $rankItem['ranklist'] = json_encode($ranklist);
             $rankItem['date'] = $date;
             M("day_ranklist")->add($rankItem);
@@ -68,9 +69,6 @@ class MysqlService{
     public static function getMysqlCurMonthRanklist(){
         $yearMonth = DateService::getCurrentYearMonth();
         $ranklist = self::generateMysqlMonthRanklist($yearMonth);
-        $rankItem['yearmonth'] = $yearMonth;
-        $rankItem['ranklist'] = json_encode($ranklist);
-        M("month_ranklist")->add($rankItem);
         return $ranklist;
     }
 
@@ -84,6 +82,7 @@ class MysqlService{
             return json_decode($rankItem['ranklist'],true);
         }else{
             $ranklist = self::generateMysqlMonthRanklist($yearMonth);
+            $rankItem['total'] = CountinService::getRanklistTotalNum($ranklist);
             $rankItem['yearmonth'] = $yearMonth;
             $rankItem['ranklist'] = json_encode($ranklist);
             M("month_ranklist")->add($rankItem);
@@ -99,6 +98,7 @@ class MysqlService{
     public static function generateMysqlMonthRanklist($yearMonth){
         $begDate = $yearMonth."-01";
         $endDate = $yearMonth."-31";
+        DebugService::displayLog("generateMysqlMonthRanklist: begDate=$begDate, endDate=$endDate");
         $userTable = C("DB_PREFIX")."user";
         $dayCountTable = C("DB_PREFIX")."day_count";
         $sql = "SELECT
@@ -124,7 +124,7 @@ class MysqlService{
                 AND count.num > '0'
                 ORDER BY
                     count.num DESC";
-
+        DebugService::displayLog($sql);
         return M()->query($sql);
     }
 
@@ -150,6 +150,7 @@ class MysqlService{
     public static function getMysqlTodayNumById($userid){
         $todayDate = DateService::getStrDate();
         $count = M("day_count")->where("userid='$userid' and today_date='$todayDate'")->find();
+        DebugService::displayLog($count);
         if( $count ){
             return $count['num'];
         }else{
@@ -191,7 +192,7 @@ class MysqlService{
         }
     }
 
-    public static function addMysqlTotalNum( $userid, $num ){
+    public static function addMysqlUserTotalNum($userid, $num ){
         $dao = M();
         $table = C("DB_PREFIX")."user";
         if( $dao->execute("update $table set total=total+$num where id='$userid'") ){
@@ -199,6 +200,68 @@ class MysqlService{
         }else{
             return false;
         }
+    }
+
+    public static function generateMysqlDayTotalNum($date){
+        $num = M("day_count")->field("sum(num) as num")->where("today_date='$date'")->select();
+        if( $num ){
+            DebugService::displayLog("generateMysqlDayTotalNum:num = $num[0]['num']");
+            return $num[0]['num'];
+        }else{
+            DebugService::displayLog("generateMysqlDayTotalNum:num = not data");
+            return 0;
+        }
+    }
+
+    public static function generateMysqlMonthTotalNum($yearMonth){
+        $begDate = $yearMonth."-01";
+        $endDate = $yearMonth."-31";
+        $num = M("day_count")->field("sum(num) as num")->where("today_date>='$begDate' and today_date <= '$endDate'")->select();
+        if( $num ){
+            return $num[0]['num'];
+        }else{
+            DebugService::displayLog("generateMysqlMonthTotalNum : num = not data");
+            return 0;
+        }
+    }
+
+    /**
+     * 获取某一天（如果是今天的话，查询不到，返回-1）的共修总数，若数据库中没有，返回-1
+     * @param $date
+     * @return int
+     */
+    public static function getMysqlDayTotalNum($date){
+        $rankItem = M("day_ranklist")->where("date=$date")->find();
+        if( $rankItem ){
+            return $rankItem['total'];
+        }else{
+            return -1;
+        }
+    }
+
+    /**
+     * 获取month_ranklist中存的总数，如果不存在，返回-1
+     * @param $date
+     * @return int
+     */
+    public static function getMysqlMonthTotalNum($yearMonth){
+        $rankItem = M("month_ranklist")->where("yearmonth='$yearMonth'")->find();
+        if( $rankItem ){
+            return $rankItem['total'];
+        }else{
+            return -1;
+        }
+    }
+
+    public static function generateMysqlTotalNum(){
+        $totalNum = 0;
+        $result = M("month_ranklist")->field("sum(total) as num")->select();
+        if( $result ){
+            $totalNum += $result[0]['num'];
+        }
+        $curYearMonth = DateService::getCurrentYearMonth();
+        $totalNum += self::generateMysqlMonthTotalNum($curYearMonth);
+        return $totalNum;
     }
 
 }

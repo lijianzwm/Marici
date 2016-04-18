@@ -50,6 +50,13 @@ class RanklistService{
      * @return mixed
      */
     public static function getSomedayRanklist($date){
+        $today = DateService::getCurrentYearMonthDay();
+        if ($date == $today ) {
+            return self::getTodayRanklist();
+        }
+        if( $date > $today ) {
+            return array();
+        }
         $ranklist = RedisService::getRedisSomedayRanklist($date);
         if( $ranklist == false ){
             $ranklist = RedisService::cachingSomedayRanklist($date);
@@ -64,17 +71,25 @@ class RanklistService{
     public static function getCurMonthRanklist(){
         $ranklist = RedisService::getRedisCurMonthRanklist();
         if( $ranklist == false ){
+            DebugService::displayLog("cachingCurMonthRanklist");
             $ranklist = RedisService::cachingCurMonthRanklist();
         }
         return $ranklist;
     }
 
     /**
-     * 获取某月排行
+     * 获取某月排行，如果当月没有排行，返回array();
      * @param $yearMonth
      * @return mixed
      */
     public static function getMonthRanklist($yearMonth){
+        $curYearMonth = DateService::getCurrentYearMonth();
+        if( $yearMonth == $curYearMonth ){
+            return self::getCurMonthRanklist();
+        }
+        if( $yearMonth > $curYearMonth ){
+            return array();
+        }
         $ranklist = RedisService::getRedisMonthRanklist($yearMonth);
         if( $ranklist == false ){
             $ranklist = RedisService::cachingMonthRanklist($yearMonth);
