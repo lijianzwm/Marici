@@ -10,6 +10,7 @@ namespace Home\Controller;
 
 use Think\Controller;
 use Common\Service\UserService;
+use Common\Service\CountinService;
 
 class LoginController extends Controller{
 
@@ -30,7 +31,7 @@ class LoginController extends Controller{
             session("userid", $user['id']);
             session("phone", $phone);
             session("showname", $user['showname']);
-            $this->success("登录成功！",U('Index/index'));
+            $this->success("登录成功！",U('Login/userCenter'));
         }else{
             $this->error("密码错误！");
         }
@@ -104,8 +105,20 @@ class LoginController extends Controller{
     public function userCenter(){
         $id =  session("userid");
         $phone = session("phone");
+        $todayNum = CountinService::getUserTodayNumById($id);
         if( $id && $phone ){
             $user = UserService::getUserByPhone($phone);
+            $user['goal'] = $user['goal'] == 0 ? null : $user['goal'];
+            $user['day_goal'] = $user['day_goal'] == 0 ? null : $user['day_goal'];
+            if( $user['goal'] != null ){
+                $totalGoalPercent = CountinService::calPercent($user['total'],$user['goal']);
+                $this->assign("totalGoalPercent", $totalGoalPercent);
+            }
+            if( $user['day_goal'] != null ){
+                $dayGoalPercent = CountinService::calPercent($todayNum,$user['day_goal']);
+                $this->assign("dayGoalPercent", $dayGoalPercent);
+            }
+            $this->assign("todayNum", $todayNum);
             $this->assign("user", $user);
             $this->display();
         }else{
@@ -119,5 +132,7 @@ class LoginController extends Controller{
         session("showname", null);
         redirect(U('Index/index'));
     }
+
+
 
 }

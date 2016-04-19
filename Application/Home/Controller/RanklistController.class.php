@@ -58,7 +58,7 @@ class RanklistController extends Controller{
 
     public function totalRanklist(){
         $ranklist = RanklistService::getTotalRanklist();
-        $total = CountinService::getRanklistTotalNum($ranklist);
+        $total = CountinService::getAllUserTotalNum();
         $this->assign("total", $total);
         $this->assign("title","总排行榜");
         $this->assign("refreshTime", C("TOTAL_RANKLIST_EXPIRE"));
