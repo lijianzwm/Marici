@@ -6,6 +6,7 @@ CREATE TABLE `gx_user` (
   `dharma` varchar(50) DEFAULT NULL COMMENT '法名',
   `showname` varchar(50) DEFAULT NULL COMMENT '显示名',
   `total` bigint(20) NOT NULL DEFAULT '0' COMMENT '共修总数',
+  `goal` bigint(30) DEFAULT NULL COMMENT '发愿持诵的数目',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
