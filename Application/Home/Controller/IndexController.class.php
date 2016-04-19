@@ -1,5 +1,6 @@
 <?php
 namespace Home\Controller;
+use Common\Service\CountinService;
 use Think\Controller;
 use Common\Service\DateService;
 
@@ -34,6 +35,9 @@ class IndexController extends Controller {
                 $state = "started";
             }
         }
+
+        $totalNum = CountinService::getAllUserTotalNum();
+        $this->assign("totalNum", $totalNum);
         $this->assign("state", $state);
         $this->display();
     }

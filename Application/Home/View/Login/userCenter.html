@@ -14,9 +14,19 @@
             -webkit-transition: color.5s;
         }
 
-        .total-num{
+        .count-info-box{
+            margin-bottom:20px;
             font-size:20px;
-            color:#ff0000;
+        }
+
+        .num-percent{
+            color: #0000ff;
+            display:inline-block;
+        }
+
+        .num{
+            font-weight:bold;
+            display:inline-block;
         }
 
     </style>
@@ -24,11 +34,40 @@
 <body>
 
 <div class="user-box-title">个人中心</div>
-<div class="total-num">持咒总数：{$user.total}</div>
+<div class="count-info-box">
+    <div class="today-num">
+        今日数目：
+        <div class="num">{$todayNum}</div>
+    </div>
+    <if condition="$user['day_goal'] neq null">
+        <div class="goal-num">
+            今日目标：
+            <div class="num">{$user.day_goal}&nbsp;&nbsp;</div>
+            完成度：
+            <div class="num-percent">{$dayGoalPercent}</div>
+        </div>
+    </if>
+    <div class="total-num">
+        持咒总数：
+        <div class="num">{$user.total}</div>
+    </div>
+    <if condition="$user['goal'] neq null">
+        <div class="goal-num">
+            发愿目标：
+            <div class="num">{$user.goal}&nbsp;&nbsp;</div>
+            完成度：
+            <div class="num-percent">{$totalGoalPercent}</div>
+        </div>
+    </if>
+</div>
+
+
 <input type="hidden" name="id" value="{$user.id}"/>
-<div class="user-box-item">手机：<input name="phone" value="{$user.phone}" disabled="disabled"/></div>
-<div class="user-box-item">姓名：<input name="realname" id="realname" placeholder="真实姓名" value="{$user.realname}"/></div>
-<div class="user-box-item">法名：<input name="dharma" id="dharma" placeholder="法名（灌顶弟子填写）" value="{$user.dharma}"/></div>
+<div class="user-box-item">手机号码：<input name="phone" value="{$user.phone}" disabled="disabled"/></div>
+<div class="user-box-item">真实姓名：<input name="realname" id="realname" placeholder="真实姓名" value="{$user.realname}"/></div>
+<div class="user-box-item">你的法名：<input name="dharma" id="dharma" placeholder="法名（灌顶弟子填写）" value="{$user.dharma}"/></div>
+<div class="user-box-item">每日目标：<input name="day_goal" id="day_goal" placeholder="每日计划数目(可不填写）" value="{$user.day_goal}"/></div>
+<div class="user-box-item">发愿目标：<input name="goal" id="goal" placeholder="发愿完成总数(可不填写）" value="{$user.goal}"/></div>
 <div class="user-box-item">
     <input class="common-button" type="button" value="保存信息" onclick="updateUserInfo()"/>
     <input class="common-button" type="button" value="修改密码" onclick="modifyPassword()"/>
@@ -56,14 +95,19 @@
                 id:'{$user.id}',
                 phone:'{$user.phone}',
                 realname:$('#realname').val(),
-                dharma:$('#dharma').val()
+                dharma:$('#dharma').val(),
+                goal:$('#goal').val(),
+                day_goal:$('#day_goal').val()
             },
             type: 'post',
             cache: false,
             dataType: 'json',
             success: function (data) {
-                //TODO 这里的提示不可靠
-                alert("保存成功！");
+                if( data.error_code ){
+                    alert(data.msg);
+                }else{
+                    alert("保存成功！");
+                }
             },
             error: function () {
                 alert("异常！");

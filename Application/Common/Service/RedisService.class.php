@@ -151,6 +151,7 @@ class RedisService{
         $num = MysqlService::generateMysqlTotalNum();
         $key = RedisKeyService::getTotalNumKey();
         self::set($key,$num,C("TOTAL_NUM_EXPIRE"));
+        return $num;
     }
 
     /**
@@ -241,7 +242,7 @@ class RedisService{
      * 获取全部数目
      * @return mixed
      */
-    public static function getTotalNum(){
+    public static function getRedisTotalNum(){
         $key = RedisKeyService::getTotalNumKey();
         return self::get($key);
     }

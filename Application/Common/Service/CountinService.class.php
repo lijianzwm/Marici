@@ -70,10 +70,8 @@ class CountinService{
     }
 
     private static function addTotalNum($num){
-        $totalNum = RedisService::getTotalNum();
-        if( $totalNum == false ){
-            $totalNum = RedisService::cachingTotalNum();
-        }
+        $totalNum = self::getAllUserTotalNum();
+
         RedisService::updateTotalNum($totalNum + $num);
     }
 
@@ -114,10 +112,15 @@ class CountinService{
     }
 
     /**
-     *
+     * 获取全部用户全部共修数目
+     * @return int|mixed
      */
     public static function getAllUserTotalNum(){
-
+        $totalNum = RedisService::getRedisTotalNum();
+        if( $totalNum == false ){
+            $totalNum = RedisService::cachingTotalNum();
+        }
+        return $totalNum;
     }
 
     public static function isTodayFirstCommit( $userid ){
@@ -138,6 +141,34 @@ class CountinService{
             $sum += $r['num'];
         }
         return $sum;
+    }
+
+    /**
+     * 判断计数数字是否合法，0算合法数字
+     * @param $num
+     * @return bool
+     */
+    public static function isCountNumLegal($num){
+        if( is_numeric( $num ) && !strpos($num, ".") ){
+            if( intval($num) >= 0 ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 计算完成度
+     * @param $num
+     * @param $total
+     * @return float
+     */
+    public static function calPercent($num, $total){
+        $percent = $num/$total;
+        if( $percent >= 1 ){
+            return "已完成";
+        }
+        return round($percent*100,2)."%";
     }
 
 }
