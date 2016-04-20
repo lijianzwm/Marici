@@ -6,3 +6,6 @@
 
 #忽略APICLOUD插件
 /webStorm-APICloud
+
+#忽略APICLOUD插件
+/Marici/res/key.xml
