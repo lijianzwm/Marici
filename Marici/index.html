@@ -56,7 +56,7 @@
             style: 'dark',
             color: '#6ab494'
         });
-
+        initNum();
         eventHandler();
         funIniGroup();
         refreshNum();
@@ -132,6 +132,13 @@
         api.setPrefs({
             key: 'counter_num',
             value: num
+        });
+    }
+
+    function initNum(){
+        api.setPrefs({
+            key: 'counter_num',
+            value: 0
         });
     }
 
