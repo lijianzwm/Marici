@@ -58,9 +58,12 @@ class UserController extends Controller{
         echo json_encode($ret);
     }
 
+    /**
+     * /Api/User/loginVolidate?phone=&password=
+     */
     public function loginVolidate(){
         $phone = I("phone");
-        $password = md5(I("password"));
+        $password = I("password");
         $ret = UserService::loginVolidate($phone, $password);
         echo json_encode($ret);
     }
