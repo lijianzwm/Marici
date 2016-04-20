@@ -28,9 +28,9 @@
 <div id="wrap" class="flex-wrap flex-vertical">
     <header>
         <ul>
-            <li class="border-b active" >计数</li>
-            <li class="border-b" >仪轨</li>
-            <li class="border-b" >排行</li>
+            <li class="border-b active" >按音量+/-键计数</li>
+            <li class="border-b" >共修仪轨</li>
+            <li class="border-b" >精进排行</li>
             <li class="border-b" >个人</li>
         </ul>
     </header>
@@ -49,14 +49,19 @@
 </body>
 <script type="text/javascript" src="script/api.js"></script>
 <script type="text/javascript">
+    var num = parseInt(0);
     apiready = function () {
         $api.fixStatusBar( $api.dom('header') );
         api.setStatusBarStyle({
             style: 'dark',
             color: '#6ab494'
         });
+
+        eventHandler();
         funIniGroup();
-    }
+        refreshNum();
+
+    };
 
     function funIniGroup(){
         var eHeaderLis = $api.domAll('header li'),
@@ -106,5 +111,43 @@
             index: index
         });
     }
+
+    function eventHandler(){
+
+        api.addEventListener({
+            name:'volumeup'
+        },function(ret,err){
+            addOne();
+        });
+
+        api.addEventListener({
+            name:'volumedown'
+        },function(ret,err){
+            addOne();
+        });
+    }
+
+    function addOne(){
+        num += 1;
+        api.setPrefs({
+            key: 'counter_num',
+            value: num
+        });
+    }
+
+    function refreshNum(){
+        setInterval(function () {
+            api.getPrefs({
+                key: 'counter_num'
+            }, function( ret, err ){
+                if( ret ){
+                    num = parseInt(ret.value);
+                }else{
+                    num = parseInt(0);
+                }
+            });
+        }, 200);
+    }
+
 </script>
 </html>

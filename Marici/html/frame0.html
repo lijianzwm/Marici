@@ -7,10 +7,108 @@
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
-        .empty{ text-align: center; padding: 120px 0; }
+        .counter-button{
+            width:100%;
+            height:100px;
+            background-color:#9e9a8d;
+            font-size:80px;
+        }
+
+        .sync-button{
+            width:100%;
+            height: 50px;
+            background-color:#9e9a8d;
+            border-top:1px solid;
+        }
+
+        .reset-button{
+            width:100%;
+            height: 50px;
+            background-color:#9e9a8d;
+            border-top:1px solid;
+        }
+
+        .lock-screen{
+            width:100%;
+            height: 50px;
+            background-color:#9e9a8d;
+            border-top:1px solid;
+        }
+
     </style>
 </head>
 <body>
-    <div class="empty">计数</div>
+    <input type="button" id="counter_button" class="counter-button" onclick="addOne()"/>
+    <input type="button" id="sync_button" class="sync-button" value="同步到服务器" onclick="sync()"/>
+    <input type="button" id="reset_button" class="reset-button" value="清零" onclick="setZero()"/>
+    <input type="button" id="lock_screen" class="lock-screen" value="锁定屏幕" onclick="lockScreen()"/>
 </body>
+<script src="../script/zepto.min.js"></script>
+<script type="text/javascript">
+
+    var lock = false;
+    var num = 0;
+
+    domCounterButton = $("#counter_button");
+    apiready = function () {
+        api.lockSlidPane();
+
+        setInterval(function () {
+            refreshNum();
+        }, 200);
+
+    };
+
+    function refreshNum(){
+        api.getPrefs({
+            key: 'counter_num'
+        }, function( ret, err ){
+            if( ret ){
+                num = parseInt(ret.value);
+                domCounterButton.val(num);
+            }else{
+                num = parseInt(0);
+                domCounterButton.val(num);
+            }
+        });
+    }
+
+    function addOne(){
+        num += 1;
+        api.setPrefs({
+            key: 'counter_num',
+            value: num
+        });
+    }
+
+    function lockScreen(){
+        if( lock ){
+            lock = false;
+            $('#sync_button').removeAttr("disabled");
+            $('#reset_button').removeAttr("disabled");
+            $('#counter_button').removeAttr("disabled");
+            $('#lock_screen').val("锁定屏幕");
+        }else{
+            lock = true;
+            $('#sync_button').attr("disabled", true);
+            $('#reset_button').attr("disabled", true);
+            $('#counter_button').attr("disabled", true);
+            $('#lock_screen').val("取消锁屏");
+        }
+    }
+
+    function sync(){
+        alert("sync");
+    }
+
+    function setZero(){
+        if( confirm("确定要清零吗？")){
+            api.setPrefs({
+                key: 'counter_num',
+                value: 0
+            });
+        }
+    }
+
+</script>
 </html>
