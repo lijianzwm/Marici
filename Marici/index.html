@@ -30,8 +30,8 @@
         <ul>
             <li class="border-b active" >按音量+/-键计数</li>
             <li class="border-b" >共修仪轨</li>
-            <li class="border-b" >精进排行</li>
-            <li class="border-b" >个人</li>
+            <li class="border-b" >今日排行</li>
+            <li class="border-b" >个人信息</li>
         </ul>
     </header>
     <div id="main" class="flex-con">
@@ -47,19 +47,18 @@
     </div>
 </div>
 </body>
-<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="./script/api.js"></script>
+<script src="./script/zepto.min.js"></script>
 <script type="text/javascript">
-    var num = parseInt(0);
+
     apiready = function () {
+        checkLogin();
         $api.fixStatusBar( $api.dom('header') );
         api.setStatusBarStyle({
-            style: 'dark',
-            color: '#6ab494'
+            style: 'light'
         });
-        initNum();
         eventHandler();
         funIniGroup();
-        refreshNum();
 
     };
 
@@ -74,6 +73,13 @@
                 bounces:true
             } )
         }
+        api.setFrameAttr({
+            name: 'frame0',
+            bounces: false,
+            vScrollBarEnabled: false,
+            hScrollBarEnabled: false
+        });
+
         api.openFrameGroup({
             name: 'group',
             scrollEnabled: false,
@@ -128,32 +134,48 @@
     }
 
     function addOne(){
-        num += 1;
-        api.setPrefs({
-            key: 'counter_num',
-            value: num
+        api.getPrefs({
+            key: 'counter_num'
+        }, function( ret, err ){
+            if( ret ){
+                num = parseInt(ret.value)+1;
+                api.setPrefs({
+                    key: 'counter_num',
+                    value: num
+                });
+            }else{
+                num = parseInt(0);
+                api.setPrefs({
+                    key: 'counter_num',
+                    value: num
+                });
+            }
         });
     }
 
-    function initNum(){
-        api.setPrefs({
-            key: 'counter_num',
-            value: 0
-        });
-    }
-
-    function refreshNum(){
-        setInterval(function () {
-            api.getPrefs({
-                key: 'counter_num'
-            }, function( ret, err ){
-                if( ret ){
-                    num = parseInt(ret.value);
-                }else{
-                    num = parseInt(0);
+    function checkLogin(){
+        userid = -1;
+        api.getPrefs({
+            key: 'user'
+        }, function( ret, err ){
+            if( !ret ){
+                openLoginWindow();
+            }else{
+                if( ret.value == "" ){
+                    openLoginWindow();
                 }
-            });
-        }, 200);
+            }
+        });
+    }
+
+    function openLoginWindow(){
+        api.openWin({
+            name: 'login',
+            url: './html/login.html',
+            pageParam: {
+                vScrollBarEnabled: false
+            }
+        });
     }
 
 </script>

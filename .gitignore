@@ -2,10 +2,10 @@
 /.metadata/*
 
 #忽略开发环境相关文件
-/.idea
+/.idea/*
 
 #忽略APICLOUD插件
 /webStorm-APICloud
 
 #忽略APICLOUD插件
-/Marici/res/key.xml
+/Marici/script/config.js

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>锁屏</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+        html,body {  height:100%;  background:#000000}
+
+        .num{
+            font-size:70px;
+            color:#5a5a5a;
+            text-align:center;
+            padding-top:auto;
+            padding-bottom:auto;
+        }
+
+        .hint{
+            font-size :20px;
+            color:#5a5a5a;
+            height:50px;;
+            text-align:center;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <div id="num" class="num"></div>
+    <div class="hint">>>>向右滑动解锁>>></div>
+</div>
+
+
+<script src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        domNum = $('#num');
+        $api.fixStatusBar( $api.dom('header') );
+        initWindow();
+    };
+
+    function initWindow(){
+
+        domNum.css('height', (api.winHeight-50)+"px");
+        domNum.css('line-height', (api.winHeight-70)+"px");
+
+        api.getPrefs({
+            key: 'counter_num'
+        }, function( ret, err ){
+            if( ret ){
+                num = parseInt(ret.value);
+                domNum.html(num);
+            }else{
+                num = parseInt(0);
+                domNum.html.val(num);
+            }
+        });
+
+        api.addEventListener({
+            name:'keyback'
+        },function(ret,err){
+            /**
+             * 锁定返回键
+             * */
+        });
+
+        api.addEventListener({
+            name:'swiperight'
+        },function(ret,err){
+            api.closeWin();
+        });
+
+        api.addEventListener({
+            name:'volumeup'
+        },function(ret,err){
+            addOne();
+        });
+
+        api.addEventListener({
+            name:'volumedown'
+        },function(ret,err){
+            addOne();
+        });
+
+    }
+
+    function addOne(){
+        api.getPrefs({
+            key: 'counter_num'
+        }, function( ret, err ){
+            if( ret ){
+                num = parseInt(ret.value)+1;
+                api.setPrefs({
+                    key: 'counter_num',
+                    value: num
+                });
+                domNum.html(num);
+            }else{
+                num = parseInt(0);
+                api.setPrefs({
+                    key: 'counter_num',
+                    value: num
+                });
+                domNum.html.val(num);
+            }
+        });
+    }
+
+</script>
+
+</body>
+</html>

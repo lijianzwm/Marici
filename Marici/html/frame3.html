@@ -3,14 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
-    <title>文档</title>
+    <title>个人信息</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
-        .empty{ text-align: center; padding: 120px 0; }
+
+        .info-box {
+            padding-top: 20px;
+            text-align: center;
+            font-size: 15px;
+            height: 100%;
+        }
+
+        .info-line{
+            margin-bottom: 5px;
+            border-bottom:1px solid;
+            border-color:#E1E1E1;
+            height:35px;
+        }
+
+        .hint{
+            font-size:12px;
+            color:#9e9a8d;
+            text-align:center;
+            width:100%;
+        }
+
+        .label{
+            text-align:right;
+            display:inline-block;
+            width:40%;
+            line-height:35px;
+        }
+
+        .content{
+            text-align:left;
+            display:inline-block;
+            width:40%;
+            line-height:35px;
+        }
+
+        .border{
+            font-weight:bolder;
+        }
+
+        .button{
+            width:100%;
+            line-height:35px;
+            background:#E1E1E1;
+        }
+
+
     </style>
 </head>
 <body>
-    <div class="empty">个人</div>
+    <div class="info-box">
+        <div class="refresh-success" id="refresh_success"></div>
+        <div class="info-line">
+            <div class="label">用户姓名&nbsp;</div>
+            <div class="content" id="showname"></div>
+        </div>
+        <div class="info-line">
+            <div class="label">今日数目&nbsp;</div>
+            <div class="content" id="today_num"></div>
+        </div>
+        <div class="info-line">
+            <div class="label">今日目标&nbsp;</div>
+            <div class="content" id="today_goal"></div>
+        </div>
+        <div class="info-line">
+            <div class="label">今日进度&nbsp;</div>
+            <div class="content" id="today_progress"></div>
+        </div>
+        <div class="info-line">
+            <div class="label">总数目&nbsp;</div>
+            <div class="content" id="total_num"></div>
+        </div>
+        <div class="info-line">
+            <div class="label">总目标&nbsp;</div>
+            <div class="content" id="total_goal"></div>
+        </div>
+        <div class="info-line">
+            <div class="label">总进度&nbsp;</div>
+            <div class="content" id="total_progress"></div>
+        </div>
+        <div class="info-line">
+            <div class="button" id="logout">退出登录</div>
+        </div>
+    </div>
+<script src="../script/zepto.min.js"></script>
+<script src="../script/config.js"></script>
+<script type="text/javascript">
+
+    var domRefreshSuccess = $('#refresh_success');
+
+    apiready = function(){
+
+        var todayGoal;
+        var totalGoal;
+
+        refreshUserInfo();
+        setRefreshHeader();
+        eventHandler();
+    };
+
+    function setRefreshHeader() {
+        api.setRefreshHeaderInfo({
+            visible: true,
+            bgColor: '#ccc',
+            textColor: '#fff',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+        }, function (ret, err) {
+            refreshUserInfo();
+            api.refreshHeaderLoadDone();
+        });
+    }
+
+    function refreshUserInfo(){
+        user = null;
+        api.getPrefs({
+            key: 'user'
+        }, function( ret, err ){
+            if( ret ){
+                user = $.parseJSON(ret.value);
+                $('#showname').html("&nbsp;"+user.showname);
+                $('#today_goal').html("&nbsp;"+user.day_goal);
+                $('#total_goal').html("&nbsp;"+user.goal);
+                todayGoal = parseFloat(user.day_goal);
+                totalGoal = parseFloat(user.goal);
+                initNum(user.id);
+            }else{
+                alert(JSON.stringify(err))
+            }
+        });
+        return user;
+    }
+
+    function initNum(userid){
+        api.ajax({
+            url : apiHost+'/Api/Countin/getUserCurNums',
+            method : 'post',
+            dataType:'json',
+            data : {
+                values : {
+                    apikey : apiKey,
+                    userid : userid
+                }
+            }
+        }, function(ret, err){
+            if( ret ){
+                if( ret.error_code ){
+                    alert(ret.msg);
+                }else{
+                    todayNum = parseFloat(ret.todayNum);
+                    totalNum = parseFloat(ret.totalNum);
+                    todayProgress = (todayNum/todayGoal)*100;
+                    if( todayProgress >= 100 ){
+                        todayProgress = "<div style='display:inline-block;color:green;text-align:left;'>已完成</div>";
+                    }else{
+                        todayProgress = todayProgress.toFixed(2) + " %";
+                    }
+
+                    totalProgress = (totalNum/totalGoal)*100;
+                    if( totalProgress >= 100 ){
+                        totalProgress = "已完成";
+                    }else{
+                        totalProgress = totalProgress.toFixed(2) + " %";
+                    }
+
+                    $('#today_num').html("&nbsp;"+ret.todayNum);
+                    $('#total_num').html("&nbsp;"+ret.totalNum);
+                    $('#today_progress').html("&nbsp;"+todayProgress);
+                    $('#total_progress').html("&nbsp;"+totalProgress);
+                }
+            }else{
+                alert(JSON.stringify(err))
+            }
+        });
+    }
+
+    function hintRefreshSuccess(){
+        alert("刷新成功！");
+    }
+
+    function hintRefreshFailed(){
+        alert("刷新失败！");
+    }
+
+    function eventHandler(){
+        $('#logout').click(function(){
+            api.confirm({
+                title: '注销',
+                msg: '你确定注销吗？',
+                buttons: ['确定', '取消']
+            },function( ret, err ){
+                if( ret ){
+                    if( ret.buttonIndex == 1){
+                        api.removePrefs({
+                            key: 'user'
+                        });
+                        api.openWin({
+                            name: 'login',
+                            url: '../html/login.html',
+                            pageParam: {
+                                vScrollBarEnabled: false
+                            }
+                        });
+                    }
+                }else{
+                    alert( JSON.stringify( err ) );
+                }
+            });
+        })
+    }
+
+</script>
 </body>
 </html>

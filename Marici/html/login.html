@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <link rel="stylesheet" type="text/css" href="../css/login.css"/>
+</head>
+<body>
+<header class="title">用户登录</header>
+<div class="userinfo-wrapper">
+    <div class="userinfo-line"><input id="phone" class="input" placeholder="手机号" /></div>
+    <div class="userinfo-line"><input type="password" id="password" class="input" placeholder="密码" value="kuaile123"/></div>
+    <div id="login" class="button" >登录</div>
+    <div id="regist" class="button" >注册</div>
+</div>
+<script src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/config.js"></script>
+<script type="text/javascript">
+
+    apiready = function(){
+        $api.fixStatusBar( $api.dom('header') );
+
+        api.getPhoneNumber(
+            function(ret, err){
+                if(ret){
+                    phone= ret.value;
+                    if( phone[0] == '+'){
+                        phone = phone.substr(3);
+                    }
+                    $("#phone").val(phone);
+                }
+            }
+        );
+
+        api.addEventListener({
+            name:'keyback'
+        },function(ret,err){
+            alert("请先登录！");
+        });
+
+        $('#login').click(function(){
+            phone = $("#phone").val();
+            password = $("#password").val();
+            api.ajax({
+                url : apiHost+'/Api/User/loginVolidate',
+                method : 'post',
+                dataType:'json',
+                data : {
+                    values : {
+                        apikey : apiKey,
+                        phone : phone,
+                        password : password
+                    }
+                }
+            }, function(ret, err){
+                if( ret ){
+                    if( ret.error_code ){
+                        alert(ret.msg);
+                    }else{
+                        userid = ret.userid;
+                        user = ret.user;
+                        api.setPrefs({
+                            key: 'user',
+                            value: user
+                        });
+                        api.closeWin();
+                    }
+                }else{
+                    alert(JSON.stringify(err))
+                }
+            });
+        });
+
+        $('#regist').click(function(){
+            api.openWin({
+                name: 'regist',
+                url: './regist.html'
+            });
+        })
+
+    };
+</script>
+
+</body>
+
+</html>

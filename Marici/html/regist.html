@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户注册</title>
+    <link rel="stylesheet" type="text/css" href="../css/login.css"/>
+</head>
+<body>
+<header class="title" id="title">用户注册</header>
+<div class="userinfo-wrapper">
+    <div class="userinfo-line">
+        <input type="text" class="phone" id="phone" placeholder="请输入手机号"/>
+    </div>
+    <div class="userinfo-line">
+        <input class="code" id="code" placeholder="请输入验证码" />
+    </div>
+    <div class="userinfo-line">
+        <input type="password" id="password" placeholder="设置密码"/>
+    </div>
+    <div id="send_code" class="button" >发送验证码</div>
+    <div id="regist_button" class="button" >注册新用户</div>
+    <div id="back" class="button" >返回</div>
+
+</div>
+
+<script src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/config.js"></script>
+<script type="text/javascript">
+
+    var code = 10000;
+    var jsSendMessageWait = 60;
+    var isEnableClick = true;
+
+    domSendCodeButton = $('#send_code');
+
+    apiready = function(){
+        $api.fixStatusBar( $api.dom('header') );
+        autoFillPhone();
+        eventHandler();
+    };
+
+    function autoFillPhone(){
+        api.getPhoneNumber(
+            function(ret, err){
+                if(ret){
+                    phone= ret.value;
+                    if( phone[0] == '+'){
+                        phone = phone.substr(3);
+                    }
+                    $("#phone").val(phone);
+                }
+            }
+        );
+    }
+
+    function eventHandler(){
+
+        domSendCodeButton.click(function(){
+            if( isEnableClick ){
+                if( isPhonelegal() ){
+                    sendCode();
+                }else{
+                    alert("请填写正确的手机号");
+                }
+            }
+        });
+
+        $('#regist_button').click(function(){
+            phone = $('#phone').val();
+            inputCode = $('#code').val();
+            password = $("#password").val();
+            if( inputCode == "" ){
+                alert("请点击“发送验证码”，收到验证短信后，将短信中的验证码输入到文本框内")
+            }else if( code != inputCode ){
+                alert("您输入的验证码不正确！");
+            }else if( password == "" ){
+                alert("请设置您的密码！");
+            }else{
+                //TODO 校验密码
+                regist(phone,password);
+            }
+        });
+
+        $('#back').click(function(){
+            api.closeWin();
+        })
+    }
+
+    function refreshCode(){
+        code = Math.round(Math.random()*9000)+1000;
+    }
+
+    function isPhonelegal(){
+        phone = $('#phone').val();
+        phone = $.trim(phone);
+        return (!isNaN(phone) && phone.length==11);
+    }
+
+    function sendCode(){
+        refreshCode();
+        alert(code);
+        api.ajax({
+            url : apiHost+'/Api/Message/sendVerifyCode',
+            method : 'post',
+            dataType:'json',
+            data : {
+                values : {
+                    apikey : apiKey,
+                    phone : phone,
+                    code : code
+                }
+            }
+        }, function(ret, err){
+            if( ret ){
+                //TODO 发送成功！
+            }else{
+                alert(JSON.stringify(err))
+            }
+        });
+        jsSendMessageWait = 60;
+        time(domSendCodeButton);
+    }
+
+    function time(obj){
+        if( jsSendMessageWait == 0 ){
+            obj.html("发送");
+            isEnableClick = true;
+        }else{
+            isEnableClick = false;
+            jsSendMessageWait -= 1;
+            obj.html(jsSendMessageWait);
+            setTimeout(function(){
+                time(obj);
+            },1000);
+        }
+    }
+
+    function regist(phone,password){
+        api.ajax({
+            url : apiHost+'/Api/User/regist',
+            method : 'post',
+            dataType:'json',
+            data : {
+                values : {
+                    apikey : apiKey,
+                    phone : phone,
+                    password : password
+                }
+            }
+        }, function(ret, err){
+            if( ret ){
+                if( ret.error_code ){
+                    alert(ret.msg);
+                }else{
+                    alert(ret.msg);
+                    api.closeWin();
+                }
+            }else{
+                alert(JSON.stringify(err))
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
