@@ -148,9 +148,19 @@
     }
 
     function setZeroQuery(){
-        if( confirm("确定要清零吗？")){
-            setZero();
-        }
+        api.confirm({
+            title: '清零',
+            msg: '确定要清零吗？',
+            buttons: ['确定', '取消']
+        },function( ret, err ){
+            if( ret ){
+                if( ret.buttonIndex == 1){
+                    setZero();
+                }
+            }else{
+                alert( JSON.stringify( err ) );
+            }
+        });
     }
 
     function setZero(){

@@ -15,6 +15,9 @@
         <input class="code" id="code" placeholder="请输入验证码" />
     </div>
     <div class="userinfo-line">
+        <input id="realname" placeholder="请输入真实姓名"/>
+    </div>
+    <div class="userinfo-line">
         <input type="password" id="password" placeholder="设置密码"/>
     </div>
     <div id="send_code" class="button" >发送验证码</div>
@@ -70,6 +73,7 @@
             phone = $('#phone').val();
             inputCode = $('#code').val();
             password = $("#password").val();
+            realname = $("#realname").val();
             if( inputCode == "" ){
                 alert("请点击“发送验证码”，收到验证短信后，将短信中的验证码输入到文本框内")
             }else if( code != inputCode ){
@@ -78,7 +82,7 @@
                 alert("请设置您的密码！");
             }else{
                 //TODO 校验密码
-                regist(phone,password);
+                regist(phone,password,realname);
             }
         });
 
@@ -136,7 +140,7 @@
         }
     }
 
-    function regist(phone,password){
+    function regist(phone,password,realname){
         api.ajax({
             url : apiHost+'/Api/User/regist',
             method : 'post',
@@ -145,7 +149,8 @@
                 values : {
                     apikey : apiKey,
                     phone : phone,
-                    password : password
+                    password : password,
+                    realname :realname
                 }
             }
         }, function(ret, err){

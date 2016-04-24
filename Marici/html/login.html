@@ -58,8 +58,13 @@
                     if( ret.error_code ){
                         alert(ret.msg);
                     }else{
-                        userid = ret.userid;
                         user = ret.user;
+                        if( user.day_goal == null ){
+                            alert("没有设置今日目标!");
+                        }
+                        if( user.goal == null ){
+                            alert("没有设置总目标");
+                        }
                         api.setPrefs({
                             key: 'user',
                             value: user

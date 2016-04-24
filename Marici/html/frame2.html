@@ -34,8 +34,13 @@
 
         .rank-item{
             width:100%;
-            /*height:40px;*/
             line-height:40px;
+        }
+
+        .rank-item-active{
+            width:100%;
+            line-height:40px;
+            color:#ff0000;
         }
 
         .rank-item div {
@@ -43,8 +48,13 @@
             margin-left: auto;
             margin-right: auto;
             display: inline-block;
-            /*padding-left:10px;*/
-            /*padding-right:10px;*/
+        }
+
+        .rank-item-active div {
+            width: 30%;
+            margin-left: auto;
+            margin-right: auto;
+            display: inline-block;
         }
 
     </style>
@@ -91,30 +101,42 @@
                 }
             }
         }, function(ret, err){
-            if( ret ){
-                if( ret.error_code ){
-                    alert(ret.msg);
-                }else{
-                    ranklist = ret.ranklist;
-//                    for(i in ranklist){
-                    for( var i = 0; i < ranklist.length; i++ ){
-                        rankItemStr =   "<div class='rank-item'>" +
-                                            "<div>" +
-                                                (i+1)+
-                                            "</div>" +
-                                            "<div>" +
-                                                ranklist[i].name+
-                                            "</div>" +
-                                            "<div>" +
-                                                ranklist[i].num+
-                                            "</div>" +
+            ranklist = ret.ranklist;
+            api.getPrefs({
+                key: 'user'
+            }, function( ret, err ){
+                if( ret ){
+                    user = $.parseJSON(ret.value);
+                    userid = user.id;
+                    if( ret ){
+                        if( ret.error_code ){
+                            alert(ret.msg);
+                        }else{
+                            for( var i = 0; i < ranklist.length; i++ ){
+                                rankItemStr =   "<div class='rank-item'>";
+                                if( ranklist[i].userid == userid ){
+                                    rankItemStr =   "<div class='rank-item-active'>";
+                                }
+                                rankItemStr +=       "<div>" +
+                                        (i+1)+
+                                        "</div>" +
+                                        "<div>" +
+                                        ranklist[i].name+
+                                        "</div>" +
+                                        "<div>" +
+                                        ranklist[i].num+
+                                        "</div>" +
                                         "</div>";
-                        domRankTable.append(rankItemStr);
+                                domRankTable.append(rankItemStr);
+                            }
+                        }
+                    }else{
+                        alert(JSON.stringify(err))
                     }
+                }else{
+                    alert(JSON.stringify(err))
                 }
-            }else{
-                alert(JSON.stringify(err))
-            }
+            });
         });
     }
     function setRefreshHeader() {

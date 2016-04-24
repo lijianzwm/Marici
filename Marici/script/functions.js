@@ -11,3 +11,10 @@ function getUserInfo(){
     });
     return userInfo;
 }
+
+function setUserInfo(user){
+    api.setPrefs({
+        key: 'user',
+        value: user
+    });
+}

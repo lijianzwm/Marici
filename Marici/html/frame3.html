@@ -88,6 +88,9 @@
             <div class="content" id="total_progress"></div>
         </div>
         <div class="info-line">
+            <div class="button" id="editUserInfo">修改信息</div>
+        </div>
+        <div class="info-line">
             <div class="button" id="logout">退出登录</div>
         </div>
     </div>
@@ -122,23 +125,42 @@
     }
 
     function refreshUserInfo(){
-        user = null;
         api.getPrefs({
             key: 'user'
         }, function( ret, err ){
             if( ret ){
                 user = $.parseJSON(ret.value);
-                $('#showname').html("&nbsp;"+user.showname);
-                $('#today_goal').html("&nbsp;"+user.day_goal);
-                $('#total_goal').html("&nbsp;"+user.goal);
-                todayGoal = parseFloat(user.day_goal);
-                totalGoal = parseFloat(user.goal);
-                initNum(user.id);
+                api.ajax({
+                    url : apiHost+'/Api/User/getUserInfo',
+                    method : 'post',
+                    dataType:'json',
+                    data : {
+                        values : {
+                            apikey : apiKey,
+                            userid : user.id
+                        }
+                    }
+                }, function(ret, err){
+                    if( ret ){
+                        if( ret.error_code == 0 ){
+                            user = ret.user;
+                            $('#showname').html("&nbsp;"+user.showname);
+                            todayGoal = user.day_goal;
+                            totalGoal = user.goal;
+                            todayGoal = todayGoal == 0 ? "<div style='display:inline-block;color:red;text-align:left;'>未设置</div>" : todayGoal;
+                            totalGoal = totalGoal == 0 ? "<div style='display:inline-block;color:red;text-align:left;'>未设置</div>" : totalGoal;
+                            $('#today_goal').html("&nbsp;"+todayGoal);
+                            $('#total_goal').html("&nbsp;"+totalGoal);
+                            initNum(user.id);
+                        }
+                    }else{
+                        alert(JSON.stringify(err))
+                    }
+                });
             }else{
                 alert(JSON.stringify(err))
             }
         });
-        return user;
     }
 
     function initNum(userid){
@@ -155,24 +177,13 @@
         }, function(ret, err){
             if( ret ){
                 if( ret.error_code ){
+                    alert("initNum error");
                     alert(ret.msg);
                 }else{
-                    todayNum = parseFloat(ret.todayNum);
-                    totalNum = parseFloat(ret.totalNum);
-                    todayProgress = (todayNum/todayGoal)*100;
-                    if( todayProgress >= 100 ){
-                        todayProgress = "<div style='display:inline-block;color:green;text-align:left;'>已完成</div>";
-                    }else{
-                        todayProgress = todayProgress.toFixed(2) + " %";
-                    }
-
-                    totalProgress = (totalNum/totalGoal)*100;
-                    if( totalProgress >= 100 ){
-                        totalProgress = "已完成";
-                    }else{
-                        totalProgress = totalProgress.toFixed(2) + " %";
-                    }
-
+                    todayNum = ret.todayNum;
+                    totalNum = ret.totalNum;
+                    todayProgress = getProgress(todayNum, todayGoal);
+                    totalProgress = getProgress(totalNum, totalGoal);
                     $('#today_num').html("&nbsp;"+ret.todayNum);
                     $('#total_num').html("&nbsp;"+ret.totalNum);
                     $('#today_progress').html("&nbsp;"+todayProgress);
@@ -217,6 +228,31 @@
                 }
             });
         })
+
+        $('#editUserInfo').click(function(){
+            api.openWin({
+                name: 'editUserInfo',
+                url: './editUserInfo.html'
+            });
+        })
+
+    }
+
+    function getProgress( num, goal ){
+        if( isNaN(goal) ){
+            return "<div style='display:inline-block;color:red;text-align:left;'>--</div>";
+        }
+        num = parseFloat(num);
+        goal = parseFloat(goal);
+        if( goal != 0 ){
+            progress = (num/goal)*100;
+            if( progress >= 100 ){
+                progress = "<div style='display:inline-block;color:green;text-align:left;'>已完成</div>";
+            }else{
+                progress = "<div style='display:inline-block;color:blue;text-align:left;'>"+progress.toFixed(2) + " %"+"</div>";
+            }
+        }
+        return progress;
     }
 
 </script>
