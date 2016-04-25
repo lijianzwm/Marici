@@ -188,6 +188,11 @@
                     $('#total_num').html("&nbsp;"+ret.totalNum);
                     $('#today_progress').html("&nbsp;"+todayProgress);
                     $('#total_progress').html("&nbsp;"+totalProgress);
+                    api.toast({
+                        msg: '个人信息更新成功！',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
                 }
             }else{
                 alert(JSON.stringify(err))

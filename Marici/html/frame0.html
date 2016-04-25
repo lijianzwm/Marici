@@ -86,19 +86,6 @@
     }
 
     function lockScreen(){
-//        if( lock ){
-//            lock = false;
-//            $('#sync_button').removeAttr("disabled");
-//            $('#reset_button').removeAttr("disabled");
-//            $('#counter_button').removeAttr("disabled");
-//            $('#lock_screen').val("锁定屏幕");
-//        }else{
-//            lock = true;
-//            $('#sync_button').attr("disabled", true);
-//            $('#reset_button').attr("disabled", true);
-//            $('#counter_button').attr("disabled", true);
-//            $('#lock_screen').val("取消锁屏");
-//        }
         api.openWin({
             name: 'lockScreen',
             url: './lockScreen.html',

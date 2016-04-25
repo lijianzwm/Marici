@@ -150,7 +150,11 @@
         }, function (ret, err) {
             refreshRanklist();
             api.refreshHeaderLoadDone();
-            alert("刷新成功！排行榜每分钟统计一次");
+            api.toast({
+                msg: '刷新成功，排行榜每分钟统计一次！',
+                duration: 2000,
+                location: 'bottom'
+            });
         });
     }
 
