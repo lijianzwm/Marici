@@ -1,3 +1,30 @@
+function getCountNum(){
+    num = $api.getStorage('counter_num');
+    if( num ){
+        return parseInt(num);
+    }else{//如果没有counter_num这个key,返回0
+        return 0;
+    }
+}
+
+function setCountNum(num){
+    if( isNaN(num) ){
+        alert("setCountNum传的值不是数字!");
+    }else{
+        $api.setStorage('counter_num', parseInt(num));
+    }
+}
+
+function addOneCountNum(){
+    num = getCountNum()+1;
+    setCountNum(num);
+    return num;
+}
+
+function resetCountNum(){
+    $api.setStorage('counter_num', 0);
+}
+
 function getUserInfo(){
     userInfo = null;
     api.getPrefs({
@@ -20,17 +47,17 @@ function setUserInfo(user){
 }
 
 function autoFillPhone(domPhone){
-    api.getPhoneNumber(
-        function(ret, err){
-            if(ret){
-                phone= ret.value;
-                if( phone[0] == '+'){
-                    phone = phone.substr(3);
-                }
-                domPhone.val(phone);
-            }
-        }
-    );
+    // api.getPhoneNumber(
+    //     function(ret, err){
+    //         if(ret){
+    //             phone= ret.value;
+    //             if( phone[0] == '+'){
+    //                 phone = phone.substr(3);
+    //             }
+    //             domPhone.val(phone);
+    //         }
+    //     }
+    // );
 }
 
 function sendCode(code, domSendCodeButton,jsSendMessageWait){

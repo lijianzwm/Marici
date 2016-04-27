@@ -48,6 +48,8 @@
 </div>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/functions.js"></script>
+
 <script src="./script/zepto.min.js"></script>
 <script type="text/javascript">
 
@@ -123,35 +125,35 @@
         api.addEventListener({
             name:'volumeup'
         },function(ret,err){
-            addOne();
+            addOneCountNum();
         });
 
         api.addEventListener({
             name:'volumedown'
         },function(ret,err){
-            addOne();
+            addOneCountNum();
         });
     }
 
-    function addOne(){
-        api.getPrefs({
-            key: 'counter_num'
-        }, function( ret, err ){
-            if( ret ){
-                num = parseInt(ret.value)+1;
-                api.setPrefs({
-                    key: 'counter_num',
-                    value: num
-                });
-            }else{
-                num = parseInt(0);
-                api.setPrefs({
-                    key: 'counter_num',
-                    value: num
-                });
-            }
-        });
-    }
+//    function addOne(){
+//        api.getPrefs({
+//            key: 'counter_num'
+//        }, function( ret, err ){
+//            if( ret ){
+//                num = parseInt(ret.value)+1;
+//                api.setPrefs({
+//                    key: 'counter_num',
+//                    value: num
+//                });
+//            }else{
+//                num = parseInt(0);
+//                api.setPrefs({
+//                    key: 'counter_num',
+//                    value: num
+//                });
+//            }
+//        });
+//    }
 
     function checkLogin(){
         userid = -1;

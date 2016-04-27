@@ -44,17 +44,17 @@
     };
 
     function autoFillPhone(){
-        api.getPhoneNumber(
-            function(ret, err){
-                if(ret){
-                    phone= ret.value;
-                    if( phone[0] == '+'){
-                        phone = phone.substr(3);
-                    }
-                    $("#phone").val(phone);
-                }
-            }
-        );
+//        api.getPhoneNumber(
+//            function(ret, err){
+//                if(ret){
+//                    phone= ret.value;
+//                    if( phone[0] == '+'){
+//                        phone = phone.substr(3);
+//                    }
+//                    $("#phone").val(phone);
+//                }
+//            }
+//        );
     }
 
     function eventHandler(){

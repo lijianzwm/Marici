@@ -33,6 +33,8 @@
 </div>
 
 </body>
+<script type="text/javascript" src="../script/functions.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
 <script src="../script/zepto.min.js"></script>
 <script src="../script/config.js"></script>
 <script type="text/javascript">
@@ -45,44 +47,55 @@
         setInterval(function () {
             refreshCountButton();
         }, 200);
-
-
     };
 
     function refreshCountButton(){
-        api.getPrefs({
-            key: 'counter_num'
-        }, function( ret, err ){
-            if( ret ){
-                num = parseInt(ret.value);
-                domCounterButton.val(num);
-            }else{
-                num = parseInt(0);
-                domCounterButton.val(num);
-            }
-        });
+        num = getCountNum();
+        domCounterButton.val(num);
+
+//        api.getPrefs({
+//            key: 'counter_num'
+//        }, function( ret, err ){
+//            if( ret ){
+//                if( isNaN(ret.value ) ){
+//                    num = parseInt(0);
+//                }else{
+//                    if( ret.value ){
+//                        num = parseInt(ret.value);
+//                    }else{
+//                        num = parseInt(0);
+//                    }
+//                }
+//                domCounterButton.val(num);
+//            }else{
+//                num = parseInt(0);
+//                domCounterButton.val(num);
+//            }
+//        });
     }
 
     function addOne(){
-        api.getPrefs({
-            key: 'counter_num'
-        }, function( ret, err ){
-            if( ret ){
-                num = parseInt(ret.value)+1;
-                api.setPrefs({
-                    key: 'counter_num',
-                    value: num
-                });
-                domCounterButton.val(num);
-            }else{
-                num = parseInt(0);
-                api.setPrefs({
-                    key: 'counter_num',
-                    value: num
-                });
-                domCounterButton.val(num);
-            }
-        });
+        num = addOneCountNum();
+        domCounterButton.val(num);
+//        api.getPrefs({
+//            key: 'counter_num'
+//        }, function( ret, err ){
+//            if( ret ){
+//                num = parseInt(ret.value)+1;
+//                api.setPrefs({
+//                    key: 'counter_num',
+//                    value: num
+//                });
+//                domCounterButton.val(num);
+//            }else{
+//                num = parseInt(0);
+//                api.setPrefs({
+//                    key: 'counter_num',
+//                    value: num
+//                });
+//                domCounterButton.val(num);
+//            }
+//        });
     }
 
     function lockScreen(){
@@ -125,7 +138,7 @@
                 if( ret.error_code ){
                     alert(ret.msg);
                 }else{
-                    setZero();
+                    resetCountNum();
                     alert("保存成功，本地计数自动清零");
                 }
             }else{
@@ -142,18 +155,11 @@
         },function( ret, err ){
             if( ret ){
                 if( ret.buttonIndex == 1){
-                    setZero();
+                    resetCountNum();
                 }
             }else{
                 alert( JSON.stringify( err ) );
             }
-        });
-    }
-
-    function setZero(){
-        api.setPrefs({
-            key: 'counter_num',
-            value: 0
         });
     }
 
