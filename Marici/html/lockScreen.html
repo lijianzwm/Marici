@@ -45,17 +45,23 @@
         domNum.css('height', (api.winHeight-50)+"px");
         domNum.css('line-height', (api.winHeight-70)+"px");
 
-        api.getPrefs({
-            key: 'counter_num'
-        }, function( ret, err ){
-            if( ret ){
-                num = parseInt(ret.value);
-                domNum.html(num);
-            }else{
-                num = parseInt(0);
-                domNum.html.val(num);
-            }
-        });
+        num = $api.getStorage('counter_num');
+        if( isNaN(num)){
+            num = 0;
+        }
+        domNum.html(num);
+
+//        api.getPrefs({
+//            key: 'counter_num'
+//        }, function( ret, err ){
+//            if( ret ){
+//                num = parseInt(ret.value);
+//                domNum.html(num);
+//            }else{
+//                num = parseInt(0);
+//                domNum.html.val(num);
+//            }
+//        });
 
         api.addEventListener({
             name:'keyback'

@@ -2,103 +2,108 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <title>计数</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
 
-        .wrapper input{
-            width:100%;
-            height: 50px;
-            border-top:1px solid;
-            border-color:#E1E1E1;
-            display:block;
+        .counter-button {
+            font-size: 80px;
+            display: block;
+            width: 100%;
         }
 
-        .counter-button{
-            font-size:80px;
-            display:block;
+        .header-title{
             width:100%;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding-right:50px;
+        }
+
+        .header-more{
+            position:absolute;
+            top:0;
+            right:5px;
+        }
+
+        .more-operate{
+            width:200px;
+            position:absolute;
+            top:50px;
+            right:0;
+            background:#F1F1F1;
+        }
+
+        .operate-item{
+            width:200px;
+            text-align:center;
+            font-size:20px;
+            border-bottom: 1px solid;
+            border-color: #E1E1E1;
+        }
+
+        .hide{
+            display:none;
         }
 
     </style>
 </head>
 <body>
+<header>
+    <div class="header-title">按音量键+/-计数</div>
+    <div class="header-more" onclick="showMoreOperate()" >更多...</div>
+</header>
 <input type="button" id="counter_button" class="counter-button" onclick="addOne()"/>
-<div class="wrapper">
-    <input type="button" id="sync_button" class="sync-button" value="同步到服务器" onclick="sync()"/>
-    <input type="button" id="reset_button" class="reset-button" value="清零" onclick="setZeroQuery()"/>
-    <input type="button" id="lock_screen" class="lock-screen" value="锁定屏幕" onclick="lockScreen()"/>
+<div class="more-operate" id="more_operate">
+    <div class="operate-item">
+        <input type="button" id="sync_button" class="sync-button" value="同步到服务器" onclick="sync()"/>
+    </div>
+    <div class="operate-item">
+        <input type="button" id="reset_button" class="reset-button" value="清零" onclick="setZeroQuery()"/>
+    </div>
+    <div class="operate-item">
+        <input type="button" id="lock_screen" class="lock-screen" value="锁定屏幕" onclick="lockScreen()"/>
+    </div>
 </div>
 
 </body>
 <script type="text/javascript" src="../script/functions.js"></script>
 <script type="text/javascript" src="../script/api.js"></script>
-<script src="../script/zepto.min.js"></script>
 <script src="../script/config.js"></script>
 <script type="text/javascript">
 
     var lock = false;
-
-    domCounterButton = $("#counter_button");
+    hide = true;
+    domCounterButton = $api.dom("#counter_button");
+    domShowMoreOperate = $api.dom("#more_operate");
     apiready = function () {
+        $api.fixStatusBar( $api.dom('header') );
+        $api.addCls(domShowMoreOperate,'hide');
         initCountButton();
         setInterval(function () {
             refreshCountButton();
         }, 200);
     };
 
-    function refreshCountButton(){
+    function refreshCountButton() {
         num = getCountNum();
-        domCounterButton.val(num);
-
-//        api.getPrefs({
-//            key: 'counter_num'
-//        }, function( ret, err ){
-//            if( ret ){
-//                if( isNaN(ret.value ) ){
-//                    num = parseInt(0);
-//                }else{
-//                    if( ret.value ){
-//                        num = parseInt(ret.value);
-//                    }else{
-//                        num = parseInt(0);
-//                    }
-//                }
-//                domCounterButton.val(num);
-//            }else{
-//                num = parseInt(0);
-//                domCounterButton.val(num);
-//            }
-//        });
+        $api.val(domCounterButton, num);
     }
 
-    function addOne(){
-        num = addOneCountNum();
-        domCounterButton.val(num);
-//        api.getPrefs({
-//            key: 'counter_num'
-//        }, function( ret, err ){
-//            if( ret ){
-//                num = parseInt(ret.value)+1;
-//                api.setPrefs({
-//                    key: 'counter_num',
-//                    value: num
-//                });
-//                domCounterButton.val(num);
-//            }else{
-//                num = parseInt(0);
-//                api.setPrefs({
-//                    key: 'counter_num',
-//                    value: num
-//                });
-//                domCounterButton.val(num);
-//            }
-//        });
+    function addOne() {
+        if( !hide ){
+            hide = !hide;
+            $api.addCls(domShowMoreOperate, 'hide');
+        }else{
+            num = addOneCountNum();
+            $api.val(domCounterButton, num);
+        }
     }
 
-    function lockScreen(){
+    function lockScreen() {
         api.openWin({
             name: 'lockScreen',
             url: './lockScreen.html',
@@ -108,64 +113,74 @@
         });
     }
 
-    function sync(){
+    function sync() {
         api.getPrefs({
             key: 'user'
-        }, function( ret, err ){
-            if( ret ){
-                user = $.parseJSON(ret.value);
-                pushNum(user.id, domCounterButton.val());
-            }else{
+        }, function (ret, err) {
+            if (ret) {
+                user = JSON.parse(ret.value);
+                pushNum(user.id, $api.val(domCounterButton));
+            } else {
                 alert(JSON.stringify(err))
             }
         });
     }
 
-    function pushNum(userid, num){
+    function pushNum(userid, num) {
         api.ajax({
-            url : apiHost+'/Api/Countin/addNum',
-            method : 'post',
-            dataType:'json',
-            data : {
-                values : {
-                    apikey : apiKey,
-                    userid : userid,
-                    num : num
+            url: apiHost + '/Api/Countin/addNum',
+            method: 'post',
+            dataType: 'json',
+            data: {
+                values: {
+                    apikey: apiKey,
+                    userid: userid,
+                    num: num
                 }
             }
-        }, function(ret, err){
-            if( ret ){
-                if( ret.error_code ){
+        }, function (ret, err) {
+            if (ret) {
+                if (ret.error_code) {
                     alert(ret.msg);
-                }else{
+                } else {
                     resetCountNum();
                     alert("保存成功，本地计数自动清零");
                 }
-            }else{
+            } else {
                 alert(JSON.stringify(err))
             }
         });
     }
 
-    function setZeroQuery(){
+    function setZeroQuery() {
         api.confirm({
             title: '清零',
             msg: '确定要清零吗？',
-            buttons: ['确定', '取消']
-        },function( ret, err ){
-            if( ret ){
-                if( ret.buttonIndex == 1){
+            buttons: ['取消', '确定']
+        }, function (ret, err) {
+            if (ret) {
+                if (ret.buttonIndex == 2) {
                     resetCountNum();
                 }
-            }else{
-                alert( JSON.stringify( err ) );
+            } else {
+                alert(JSON.stringify(err));
             }
         });
     }
 
-    function initCountButton(){
-        var frameHeight = api.frameHeight - 50*3 ;
-        domCounterButton.css("height",frameHeight+"px");
+    function initCountButton() {
+        var frameHeight = api.frameHeight - 50 * 4;
+        $api.css(domCounterButton, "height:" + frameHeight + "px;");
+    }
+
+    function showMoreOperate(){
+        if( hide ){
+            $api.removeCls(domShowMoreOperate, 'hide');
+            hide = !hide;
+        }else{
+            $api.addCls(domShowMoreOperate, 'hide');
+            hide = !hide;
+        }
     }
 
 </script>
