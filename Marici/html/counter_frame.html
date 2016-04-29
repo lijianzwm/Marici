@@ -15,36 +15,6 @@
             width: 100%;
         }
 
-        .header-title{
-            width:100%;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-            padding-right:50px;
-        }
-
-        .header-more{
-            position:absolute;
-            top:0;
-            right:5px;
-        }
-
-        .more-operate{
-            width:200px;
-            position:absolute;
-            top:50px;
-            right:0;
-            background:#F1F1F1;
-        }
-
-        .operate-item{
-            width:200px;
-            text-align:center;
-            font-size:20px;
-            border-bottom: 1px solid;
-            border-color: #E1E1E1;
-        }
-
         .hide{
             display:none;
         }
@@ -53,16 +23,10 @@
 </head>
 <body>
 <input type="button" id="counter_button" class="counter-button" onclick="addOne()"/>
-<div class="more-operate" id="more_operate">
-    <div class="operate-item">
-        <input type="button" id="sync_button" class="sync-button" value="同步到服务器" onclick="sync()"/>
-    </div>
-    <div class="operate-item">
-        <input type="button" id="reset_button" class="reset-button" value="清零" onclick="setZeroQuery()"/>
-    </div>
-    <div class="operate-item">
-        <input type="button" id="lock_screen" class="lock-screen" value="锁定屏幕" onclick="lockScreen()"/>
-    </div>
+<div class="wrapper">
+    <input type="button" id="sync_button" class="sync-button" value="同步到服务器" onclick="sync()"/>
+    <input type="button" id="reset_button" class="reset-button" value="清零" onclick="setZeroQuery()"/>
+    <input type="button" id="lock_screen" class="lock-screen" value="锁定屏幕" onclick="lockScreen()"/>
 </div>
 
 </body>
