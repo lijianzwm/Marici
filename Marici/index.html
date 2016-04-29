@@ -1,149 +1,255 @@
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>Hello APP</title>
+    <title>APICloud App</title>
     <link rel="stylesheet" type="text/css" href="./css/api.css" />
-    <link rel="stylesheet" type="text/css" href="./css/style.css"/>
-    <style type="text/css">
-        header{ background-color: #f2f2f2; }
-        header ul li { height: 50px; line-height: 50px; text-align: center; display: none; color: #323237; position: relative;font-size: 18px;  }
-        header ul li.active{ display: block; }
-        #footer{  background-color: #f2f2f2; }
-        #footer ul li{  padding-top: 36px; padding-bottom: 4px; background: url() no-repeat center 2px; background-size: auto 30px; text-align: center; }
-        #footer ul li.active{ color: #6ab494; }
-        #footer ul li:nth-child(1){ background-image: url(./image/footer/counter.png); }
-        #footer ul li:nth-child(2){ background-image: url(./image/footer/yigui.png); }
-        #footer ul li:nth-child(3){ background-image: url(./image/footer/ranklist.png); }
-        #footer ul li:nth-child(4){ background-image: url(./image/footer/user.png); }
-        #footer ul li:nth-child(1).active{ background-image: url(./image/footer/counter-active.png); }
-        #footer ul li:nth-child(2).active{ background-image: url(./image/footer/yigui-active.png); }
-        #footer ul li:nth-child(3).active{ background-image: url(./image/footer/ranklist-active.png); }
-        #footer ul li:nth-child(4).active{ background-image: url(./image/footer/user-active.png); }
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+        }
+
+        section {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+        header {
+            position: relative;
+            height: auto;
+        }
+
+        footer {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            box-sizing: border-box;
+            height: 50px;
+            background-color: rgb(250, 250, 250);
+            border-top: 1px solid #ccc;
+        }
+
+        footer>div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            width: 100%;
+            color: rgb(165, 165, 165);
+            font-size: 12px;
+            text-align: center;
+            padding-bottom: 4px;
+            padding-top: 34px;
+            background-repeat: no-repeat;
+            background-position: center 6px;
+            background-size: auto 24px;
+        }
+
+        footer>div:nth-child(1) {
+            background-image: url(./image/footer/counter.png);
+        }
+
+        footer>div:nth-child(2) {
+            background-image: url(./image/footer/yigui.png);
+        }
+
+        footer>div:nth-child(3) {
+            background-image: url(./image/footer/ranklist.png);
+        }
+
+        footer>div:nth-child(4) {
+            background-image: url(./image/footer/user.png);
+        }
+
+        footer>div:nth-child(1).active {
+            background-image: url(./image/footer/counter-active.png);
+            color: rgb(254, 151, 84);
+        }
+
+        footer>div:nth-child(2).active {
+            background-image: url(./image/footer/yigui-active.png);
+            color: rgb(254, 151, 84);
+        }
+
+        footer>div:nth-child(3).active {
+            background-image: url(./image/footer/ranklist-active.png);
+            color: rgb(254, 151, 84);
+        }
+
+        footer>div:nth-child(4).active {
+            background-image: url(./image/footer/user-active.png);
+            color: rgb(254, 151, 84);
+        }
+
+        .header-item {
+            display: none;
+        }
+
+        .header-item-act {
+            display: block;
+        }
+
+        .header-item div{
+            line-height:50px;
+            text-align:center;
+        }
+
+        header>div:nth-child(1) {
+            position: relative;
+            background-color: rgb(252, 252, 252);
+            height: 50px;
+        }
+
+        header>div:nth-child(2) {
+            position: relative;
+            height: 50px;
+            background-color: rgb(252, 252, 252);
+        }
+
+        header>div:nth-child(3) {
+            position: relative;
+            height: 50px;
+            background-color: rgb(252, 252, 252);
+        }
+        header>div:nth-child(4) {
+            position: relative;
+            height: 50px;
+            background-color: rgb(252, 252, 252);
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+
     </style>
 </head>
+
 <body>
-<div id="wrap" class="flex-wrap flex-vertical">
-    <div id="main" class="flex-con">
+<header id="header">
+
+    <div class="header-item header-item-act" id="counter">
+        <div>按音量键+/-进行计数</div>
+    </div>
+
+    <div class="header-item" id="yigui">
 
     </div>
-    <div id="footer" class="border-t">
-        <ul class="flex-wrap" >
-            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con active" >计数</li>
-            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >仪轨</li>
-            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >排行</li>
-            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >个人</li>
-        </ul>
+
+    <div class="header-item" id="ranklist">
+        <div>排行榜</div>
     </div>
-</div>
+
+    <div class="header-item" id="user">
+        <div>用户信息</div>
+    </div>
+
+</header>
+
+<section></section>
+<footer id="footer">
+    <div class="active" tapmode="active" onclick="fnFooterChange(0)">计数</div>
+    <div tapmode="active" onclick="fnFooterChange(1)">仪轨</div>
+    <div tapmode="active" onclick="fnFooterChange(2)">排行</div>
+    <div tapmode="active" onclick="fnFooterChange(3)">用户</div>
+</footer>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
-<script type="text/javascript" src="./script/functions.js"></script>
-
-<script src="./script/zepto.min.js"></script>
+<script type="text/javascript" src="./script/localdb.js"></script>
 <script type="text/javascript">
-
-    apiready = function () {
-        checkLogin();
-//        $api.fixStatusBar( $api.dom('header') );
-        api.setStatusBarStyle({
-            style: 'light'
-        });
-        eventHandler();
-        funIniGroup();
-
+    apiready = function() {
+        fnInitEvent();
+        fnInit();
+        fnFooterChange(0);
     };
 
-    function funIniGroup(){
-        var frames = [];
-        for (var i = 0,len = 4; i < len; i++) {
-            frames.push( {
-                name: 'frame'+i,
-                url: './html/frame'+i+'.html',
-                bgColor : 'rgba(0,0,0,.2)',
-                bounces:true
-            } )
+    function fnInitEvent() {
+        var flag = false;
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            if (false == flag) {
+                api.toast({
+                    msg: '再按一次退出',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                flag = true;
+                setTimeout(function() {
+                    flag = false;
+                }, 2000);
+            } else {
+                api.closeWidget({
+                    silent: true
+                });
+            }
+        });
+    };
+
+
+    var headers, footers, headerHeight, footerHeight;
+
+    function fnInit() {
+        var header = $api.byId('header'),
+                footer = $api.byId('footer');
+
+        headers = $api.domAll(header, '.header-item');
+        footers = $api.domAll(footer, 'div');
+
+        for (var i = 0; i < headers.length; i++) {
+            $api.fixIos7Bar(headers[i]);
         }
 
-        api.openFrameGroup({
-            name: 'group',
-            scrollEnabled: false,
-            bounces: false,
-            rect: {
-                x: 0,
-                y: 0,
-                w: api.winWidth,
-                h: $api.dom('#main').offsetHeight
-            },
-            index: 0,
-            frames: frames
-        }, function (ret, err) {
-        });
-    }
+        headerHeight = $api.offset(header).h;
+        footerHeight = $api.offset(footer).h;
+    };
 
-    // 随意切换按钮
-    function randomSwitchBtn( tag ) {
-        if( tag == $api.dom('#footer li.active') )return;
-        var eFootLis = $api.domAll('#footer li'),
-                eHeaderLis = $api.domAll('header li'),
-                index = 0;
-        for (var i = 0,len = eFootLis.length; i < len; i++) {
-            if( tag == eFootLis[i] ){
-                index = i;
-            }else{
-                $api.removeCls(eFootLis[i], 'active');
-                $api.removeCls(eHeaderLis[i], 'active');
+    var frames = ['counter_frame', 'yigui_frame', 'ranklist_frame', 'user_frame'];
+
+    function fnFooterChange(index) {
+        for (var i = 0; i < headers.length; i++) {
+            if (index == i) {
+                $api.addCls(headers[i], 'header-item-act');
+                $api.addCls(footers[i], 'active');
+                var y = 1 == index ? 0 : headerHeight;
+                api.openFrame({
+                    name: frames[i],
+                    url: './html/' + frames[i] + '.html',
+                    bounces: false,
+                    vScrollBarEnabled: false,
+                    hScrollBarEnabled: false,
+                    rect: {
+                        x: 0,
+                        y: y,
+                        w: 'auto',
+                        h: api.frameHeight - y - footerHeight
+                    }
+                });
+            } else {
+                $api.removeCls(headers[i], 'header-item-act');
+                $api.removeCls(footers[i], 'active');
+
+                api.setFrameAttr({
+                    name: frames[i],
+                    hidden: true
+                });
             }
         }
-        $api.addCls( eFootLis[index], 'active');
-        $api.addCls( eHeaderLis[index], 'active');
-        api.setFrameGroupIndex({
-            name: 'group',
-            index: index
-        });
-    }
+    };
 
-    function eventHandler(){
-
-        api.addEventListener({
-            name:'volumeup'
-        },function(ret,err){
-            addOneCountNum();
-        });
-
-        api.addEventListener({
-            name:'volumedown'
-        },function(ret,err){
-            addOneCountNum();
-        });
-    }
-
-    function checkLogin(){
-        userid = -1;
-        api.getPrefs({
-            key: 'user'
-        }, function( ret, err ){
-            if( !ret ){
-                openLoginWindow();
-            }else{
-                if( ret.value == "" ){
-                    openLoginWindow();
-                }
-            }
-        });
-    }
-
-    function openLoginWindow(){
-        api.openWin({
-            name: 'login',
-            url: './html/login.html',
-            pageParam: {
-                vScrollBarEnabled: false
-            }
-        });
-    }
 
 </script>
+
 </html>
