@@ -15,8 +15,12 @@
             width: 100%;
         }
 
-        .hide{
-            display:none;
+        .wrapper input{
+            width:100%;
+            height: 50px;
+            border-top:1px solid;
+            border-color:#E1E1E1;
+            display:block;
         }
 
     </style>
@@ -127,7 +131,7 @@
     }
 
     function initCountButton() {
-        var frameHeight = api.frameHeight - 50 * 4;
+        var frameHeight = api.frameHeight - 50 * 3;
         $api.css(domCounterButton, "height:" + frameHeight + "px;");
     }
 
