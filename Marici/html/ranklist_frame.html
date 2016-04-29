@@ -95,10 +95,6 @@
     </style>
 </head>
 <body>
-<header>
-    <div class="header-title" id="header_title"></div>
-    <div class="header-more" onclick="showMoreRanklist()" >更多排行..</div>
-</header>
 
 <div class="more-ranklist" id="more_ranklist">
     <div class="more-ranklist-item" id="yesterday_ranklist" onclick="renderYesterdayRanklist()">昨日排行</div>
@@ -126,8 +122,6 @@
     moreRankHide = true;
 
     apiready = function () {
-        $api.fixStatusBar( $api.dom('header') );
-        $api.addCls($api.dom("#more_ranklist"),'hide');
 //        $api.css($api.dom("#rank_wrapper"), 'height:' + (api.frameHeight - 50)+ 'px');
 //        $api.addCls($api.dom("#rank_wrapper"), 'rank-wrapper');
         refreshRanklist();

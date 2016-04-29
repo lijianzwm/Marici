@@ -52,10 +52,6 @@
     </style>
 </head>
 <body>
-<header>
-    <div class="header-title">按音量键+/-计数</div>
-    <div class="header-more" onclick="showMoreOperate()" >更多...</div>
-</header>
 <input type="button" id="counter_button" class="counter-button" onclick="addOne()"/>
 <div class="more-operate" id="more_operate">
     <div class="operate-item">
@@ -80,8 +76,6 @@
     domCounterButton = $api.dom("#counter_button");
     domShowMoreOperate = $api.dom("#more_operate");
     apiready = function () {
-        $api.fixStatusBar( $api.dom('header') );
-        $api.addCls(domShowMoreOperate,'hide');
         initCountButton();
         setInterval(function () {
             refreshCountButton();
