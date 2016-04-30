@@ -84,12 +84,14 @@
     </style>
 </head>
 <body>
-<div class="rank-type-wrapper">
-    <div class="rank-type-item rank-type-item-active" id="ranktype_today" onclick="switchRankType('today')">今日</div>
-    <div class="rank-type-item" id="ranktype_yesterday" onclick="switchRankType('yesterday')">昨日</div>
-    <div class="rank-type-item" id="ranktype_curMonth" onclick="switchRankType('curMonth')">本月</div>
-    <div class="rank-type-item" id="ranktype_total" onclick="switchRankType('total')">全部</div>
-</div>
+<header>
+    <div class="rank-type-wrapper">
+        <div class="rank-type-item rank-type-item-active" id="ranktype_today" onclick="switchRankType('today')">今日</div>
+        <div class="rank-type-item" id="ranktype_yesterday" onclick="switchRankType('yesterday')">昨日</div>
+        <div class="rank-type-item" id="ranktype_curMonth" onclick="switchRankType('curMonth')">本月</div>
+        <div class="rank-type-item" id="ranktype_total" onclick="switchRankType('total')">全部</div>
+    </div>
+</header>
 <div class="rank-wapper" id="rank">
     <div class="rank-table" id="rank_table">
         <div class="rank-title">
@@ -107,6 +109,7 @@
     domRankTable = $('#rank_table');
     rankType = "today";//today, yesterday, curMonth,total
     apiready = function () {
+        $api.fixIos7Bar($api.dom('header'));
         setRefreshHeader();
         refreshRanklist();
     };

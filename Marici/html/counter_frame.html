@@ -106,7 +106,11 @@
                     alert(ret.msg);
                 } else {
                     resetCountNum();
-                    alert("保存成功，本地计数自动清零");
+                    api.toast({
+                        msg: "保存成功，本地计数自动清零",
+                        duration: 2000,
+                        location: 'bottom'
+                    });
                 }
             } else {
                 alert(JSON.stringify(err))
@@ -123,6 +127,11 @@
             if (ret) {
                 if (ret.buttonIndex == 2) {
                     resetCountNum();
+                    api.toast({
+                        msg: "已清零",
+                        duration: 2000,
+                        location: 'bottom'
+                    });
                 }
             } else {
                 alert(JSON.stringify(err));

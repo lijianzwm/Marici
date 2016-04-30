@@ -41,7 +41,11 @@
         api.addEventListener({
             name:'keyback'
         },function(ret,err){
-            alert("请先登录！");
+            api.toast({
+                msg: "请先登录",
+                duration: 2000,
+                location: 'bottom'
+            });
         });
 
         $('#login').click(function(){
@@ -65,10 +69,18 @@
                     }else{
                         user = ret.user;
                         if( user.day_goal == null ){
-                            alert("没有设置今日目标!");
+                            api.toast({
+                                msg: "没有设置今日目标!",
+                                duration: 2000,
+                                location: 'bottom'
+                            });
                         }
                         if( user.goal == null ){
-                            alert("没有设置总目标");
+                            api.toast({
+                                msg: "没有设置总目标",
+                                duration: 2000,
+                                location: 'bottom'
+                            });
                         }
                         api.setPrefs({
                             key: 'user',
