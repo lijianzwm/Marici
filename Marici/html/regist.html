@@ -177,11 +177,7 @@
                         location: 'bottom'
                     });
                 }else{
-                    api.toast({
-                        msg: ret.msg,
-                        duration: 2000,
-                        location: 'bottom'
-                    });
+                    alert(ret.msg);
                     api.closeWin();
                 }
             }else{
