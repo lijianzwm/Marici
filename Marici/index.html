@@ -173,7 +173,8 @@
         fnInitEvent();
         fnInit();
         fnFooterChange(0);
-        checkLogin()
+        eventHandler();
+        checkLogin();
     };
 
     function fnInitEvent() {
@@ -210,7 +211,8 @@
         footers = $api.domAll(footer, 'div');
 
         for (var i = 0; i < headers.length; i++) {
-            $api.fixIos7Bar(headers[i]);
+//            $api.fixIos7Bar(headers[i]);
+            $api.fixStatusBar(headers[i]);
         }
 
         headerHeight = $api.offset(header).h;
