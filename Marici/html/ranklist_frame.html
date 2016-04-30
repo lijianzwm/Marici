@@ -225,22 +225,24 @@
                         if (ret.error_code) {
                             alert(ret.msg);
                         } else {
-                            for (var i = 0; i < ranklist.length; i++) {
-                                rankItemStr = "<div class='rank-item'>";
-                                if (ranklist[i].userid == userid) {
-                                    rankItemStr = "<div class='rank-item-active'>";
+                            if(ranklist){
+                                for (var i = 0; i < ranklist.length; i++) {
+                                    rankItemStr = "<div class='rank-item'>";
+                                    if (ranklist[i].userid == userid) {
+                                        rankItemStr = "<div class='rank-item-active'>";
+                                    }
+                                    rankItemStr += "<div>" +
+                                            (i + 1) +
+                                            "</div>" +
+                                            "<div>" +
+                                            ranklist[i].name +
+                                            "</div>" +
+                                            "<div>" +
+                                            ranklist[i].num +
+                                            "</div>" +
+                                            "</div>";
+                                    domRankTable.append(rankItemStr);
                                 }
-                                rankItemStr += "<div>" +
-                                        (i + 1) +
-                                        "</div>" +
-                                        "<div>" +
-                                        ranklist[i].name +
-                                        "</div>" +
-                                        "<div>" +
-                                        ranklist[i].num +
-                                        "</div>" +
-                                        "</div>";
-                                domRankTable.append(rankItemStr);
                             }
                         }
                     } else {
