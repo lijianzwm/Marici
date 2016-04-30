@@ -103,7 +103,6 @@
 
     function sendCode(){
         refreshCode();
-        alert(code);
         api.ajax({
             url : apiHost+'/Api/Message/sendVerifyCode',
             method : 'post',

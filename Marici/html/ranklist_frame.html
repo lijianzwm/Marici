@@ -58,50 +58,39 @@
             display: inline-block;
         }
 
-        .header-title{
-            width:100%;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-            padding-right:50px;
+        .rank-type-wrapper {
+            width: 100%;
+            height: 40px;
+            text-align: center;
+            background-color:rgb(250, 250, 250);
         }
 
-        .header-more{
-            position:absolute;
-            top:0;
-            right:5px;
+        .rank-type-item {
+            display: inline-block;
+            font-size: 20px;
+            line-height: 40px;
+            text-align: center;
+            width: 50px;
+            background-color: rgb(250, 250, 250);
+            color: #808080;
         }
 
-        .more-ranklist{
-            width:200px;
-            position:absolute;
-            top:50px;
-            right:0;
-            background:#F1F1F1;
-        }
-
-        .more-ranklist-item{
-            width:200px;
-            text-align:center;
-            font-size:20px;
-            border-bottom: 1px solid;
-            border-color: #E1E1E1;
-        }
-
-        .hide{
-            display:none;
+        .rank-type-item-active {
+            background-color: #f2f2f2;
+            color: #000000;
+            font-weight: bold;
         }
 
     </style>
 </head>
 <body>
-
-<div class="more-ranklist" id="more_ranklist">
-    <div class="more-ranklist-item" id="yesterday_ranklist" onclick="renderYesterdayRanklist()">昨日排行</div>
-    <div class="more-ranklist-item" id="cur_month_ranklist" onclick="renderCurMonthRanklist()">本月排行</div>
+<div class="rank-type-wrapper">
+    <div class="rank-type-item rank-type-item-active" id="ranktype_today" onclick="switchRankType('today')">今日</div>
+    <div class="rank-type-item" id="ranktype_yesterday" onclick="switchRankType('yesterday')">昨日</div>
+    <div class="rank-type-item" id="ranktype_curMonth" onclick="switchRankType('curMonth')">本月</div>
+    <div class="rank-type-item" id="ranktype_total" onclick="switchRankType('total')">全部</div>
 </div>
-
-<div class="rank-wapper" id="rank_wrapper" onclick="hideMenu()">
+<div class="rank-wapper" id="rank">
     <div class="rank-table" id="rank_table">
         <div class="rank-title">
             <div>排行</div>
@@ -116,80 +105,99 @@
 <script src="../script/api.js"></script>
 <script type="text/javascript">
     domRankTable = $('#rank_table');
-
-    rankType = "today";//today; yesterday; curMonth
-
-    moreRankHide = true;
-
+    rankType = "today";//today, yesterday, curMonth,total
     apiready = function () {
-//        $api.css($api.dom("#rank_wrapper"), 'height:' + (api.frameHeight - 50)+ 'px');
-//        $api.addCls($api.dom("#rank_wrapper"), 'rank-wrapper');
+        setRefreshHeader();
         refreshRanklist();
     };
 
-    function hideMenu(){
-        if( !moreRankHide ){
-            $api.addCls($api.dom("#more_ranklist"),'hide');
-        }
-    }
+    function switchRankType(type) {
+        if (type != rankType) {
+            $api.removeCls($api.dom('#ranktype_' + rankType), 'rank-type-item-active');
+            $api.addCls($api.dom('#ranktype_' + type), 'rank-type-item-active');
+            rankType = type;
+            switch (type) {
+                case 'today' :
+                    refreshTodayRanklist();
+                    break;
+                case 'yesterday' :
+                    refreshYesterdayRanklist();
+                    break;
+                case 'curMonth' :
+                    refreshCurMonthRanklist();
+                    break;
+                case 'total' :
+                    refreshTotalRanklist();
+                    break;
+                default:
+                    alert('rankType类型错误!');
+                    break;
+            }
 
-    function showMoreRanklist(){
-        if( moreRankHide ){
-            $api.removeCls($api.dom("#more_ranklist"),'hide');
-        }else{
-            $api.addCls($api.dom("#more_ranklist"),'hide');
         }
-        moreRankHide = !moreRankHide;
     }
 
     function refreshRanklist() {
-        if( rankType == "today" ){
-            renderTodayRanklist();
-        }else if( rankType == "curMonth" ){
-            renderCurMonthRanklist();
-        }else if( rankType == "yestredayRanklist" ){
-            renderYesterdayRanklist();
+        switch (rankType) {
+            case 'today' :
+                refreshTodayRanklist();
+                break;
+            case 'yesterday' :
+                refreshYesterdayRanklist();
+                break;
+            case 'curMonth' :
+                refreshCurMonthRanklist();
+                break;
+            case 'total':
+                refreshTotalRanklist();
+                break;
+            default:
+                alert('rankType非法!');
+                break;
         }
     }
 
-    function renderYesterdayRanklist(){
-        url = apiHost + '/Api/Ranklist/getYesterdayRanklist';
-        data = {
-            values: {
-                apikey: apiKey
-            }
-        };
-        rankType = "yesterday";
-        switchTitle("昨日排行");
-        renderRanklist(url, data);
-    }
-
-
-    function renderTodayRanklist() {
+    function refreshTodayRanklist() {
         url = apiHost + '/Api/Ranklist/getTodayRanklist';
         data = {
             values: {
                 apikey: apiKey
             }
         };
-        rankType = "today";
-        switchTitle("今日排行");
         renderRanklist(url, data);
     }
 
-    function renderCurMonthRanklist(){
+    function refreshYesterdayRanklist() {
+        url = apiHost + '/Api/Ranklist/getYesterdayRanklist';
+        data = {
+            values: {
+                apikey: apiKey
+            }
+        };
+        renderRanklist(url, data);
+    }
+
+    function refreshCurMonthRanklist() {
         url = apiHost + '/Api/Ranklist/getCurMonthRanklist';
         data = {
             values: {
                 apikey: apiKey
             }
         };
-        rankType = "curMonth";
-        switchTitle("本月排行");
         renderRanklist(url, data);
     }
 
-    function renderRanklist( url, data ){
+    function refreshTotalRanklist(){
+        url = apiHost + '/Api/Ranklist/getTotalRanklist';
+        data = {
+            values: {
+                apikey: apiKey
+            }
+        };
+        renderRanklist(url, data);
+    }
+
+    function renderRanklist(url, data) {
         domRankTable.empty();
         domRankTable.append("<div class='rank-title'>" +
                 "<div>排行</div>" +
@@ -251,7 +259,6 @@
             showTime: true
         }, function (ret, err) {
             refreshRanklist();
-            hideMenu();
             api.refreshHeaderLoadDone();
             api.toast({
                 msg: '刷新成功，排行榜每分钟统计一次！',
@@ -259,10 +266,6 @@
                 location: 'bottom'
             });
         });
-    }
-
-    function switchTitle(title){
-        $api.html($api.dom("#header_title"),title);
     }
 
 </script>

@@ -60,7 +60,7 @@ function autoFillPhone(domPhone){
     // );
 }
 
-function sendCode(code, domSendCodeButton,jsSendMessageWait){
+function sendCode(code, phone, domSendCodeButton,jsSendMessageWait){
     api.ajax({
         url : apiHost+'/Api/Message/sendVerifyCode',
         method : 'post',
@@ -76,7 +76,7 @@ function sendCode(code, domSendCodeButton,jsSendMessageWait){
         if( ret ){
             //TODO 发送成功！
         }else{
-            alert(JSON.stringify(err))
+            alert(JSON.stringify(err));
         }
     });
     time(domSendCodeButton,jsSendMessageWait);

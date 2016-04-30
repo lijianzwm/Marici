@@ -30,7 +30,7 @@
 <div class="wrapper">
     <input type="button" id="sync_button" class="sync-button" value="同步到服务器" onclick="sync()"/>
     <input type="button" id="reset_button" class="reset-button" value="清零" onclick="setZeroQuery()"/>
-    <input type="button" id="lock_screen" class="lock-screen" value="锁定屏幕" onclick="lockScreen()"/>
+    <input type="button" id="lock_screen" class="lock-screen" value="锁屏省电" onclick="lockScreen()"/>
 </div>
 
 </body>
@@ -67,8 +67,8 @@
 
     function lockScreen() {
         api.openWin({
-            name: 'lockScreen',
-            url: './lockScreen.html',
+            name: 'lockScreenWin',
+            url: './lockScreenWin.html',
             bounces: false,
             vScrollBarEnabled: false,
             hScrollBarEnabled: false

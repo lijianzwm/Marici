@@ -9,7 +9,7 @@
 <header class="title">用户登录</header>
 <div class="userinfo-wrapper">
     <div class="userinfo-line"><input id="phone" class="input" placeholder="手机号" /></div>
-    <div class="userinfo-line"><input type="password" id="password" class="input" placeholder="密码" value="kuaile123"/></div>
+    <div class="userinfo-line"><input type="password" id="password" class="input" placeholder="密码" /></div>
     <div id="login" class="button" >登录</div>
     <div id="regist" class="button" >注册</div>
     <div id="reset_password" class="button" >找回密码</div>
@@ -93,10 +93,10 @@
             api.confirm({
                 title: '退出',
                 msg: '确定要退出吗？',
-                buttons: ['确定', '取消']
+                buttons: ['取消', '确定']
             },function( ret, err ){
                 if( ret ){
-                    if( ret.buttonIndex == 1){
+                    if( ret.buttonIndex == 2){
                         api.closeWin({
                             name: 'root'
                         });

@@ -76,22 +76,22 @@
 
         footer>div:nth-child(1).active {
             background-image: url(./image/footer/counter-active.png);
-            color: rgb(254, 151, 84);
+            color: #000000;
         }
 
         footer>div:nth-child(2).active {
             background-image: url(./image/footer/yigui-active.png);
-            color: rgb(254, 151, 84);
+            color: #000000;
         }
 
         footer>div:nth-child(3).active {
             background-image: url(./image/footer/ranklist-active.png);
-            color: rgb(254, 151, 84);
+            color: #000000;
         }
 
         footer>div:nth-child(4).active {
             background-image: url(./image/footer/user-active.png);
-            color: rgb(254, 151, 84);
+            color: #000000;
         }
 
         .header-item {
@@ -173,6 +173,7 @@
         fnInitEvent();
         fnInit();
         fnFooterChange(0);
+        checkLogin()
     };
 
     function fnInitEvent() {
@@ -196,7 +197,7 @@
                 });
             }
         });
-    };
+    }
 
 
     var headers, footers, headerHeight, footerHeight;
@@ -214,7 +215,7 @@
 
         headerHeight = $api.offset(header).h;
         footerHeight = $api.offset(footer).h;
-    };
+    }
 
     var frames = ['counter_frame', 'yigui_frame', 'ranklist_frame', 'user_frame'];
 
@@ -223,7 +224,7 @@
             if (index == i) {
                 $api.addCls(headers[i], 'header-item-act');
                 $api.addCls(footers[i], 'active');
-                var y = 1 == index ? 0 : headerHeight;
+                var y = (1 == index || 2 == index ) ? 0 : headerHeight;
                 api.openFrame({
                     name: frames[i],
                     url: './html/' + frames[i] + '.html',
@@ -247,8 +248,48 @@
                 });
             }
         }
-    };
+    }
 
+    function eventHandler(){
+
+        api.addEventListener({
+            name:'volumeup'
+        },function(ret,err){
+            addOneCountNum();
+        });
+
+        api.addEventListener({
+            name:'volumedown'
+        },function(ret,err){
+            addOneCountNum();
+        });
+
+    }
+
+    function checkLogin(){
+        userid = -1;
+        api.getPrefs({
+            key: 'user'
+        }, function( ret, err ){
+            if( !ret ){
+                openLoginWindow();
+            }else{
+                if( ret.value == "" ){
+                    openLoginWindow();
+                }
+            }
+        });
+    }
+
+    function openLoginWindow(){
+        api.openWin({
+            name: 'login',
+            url: './html/login.html',
+            pageParam: {
+                vScrollBarEnabled: false
+            }
+        });
+    }
 
 </script>
 

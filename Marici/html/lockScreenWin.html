@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>锁屏win</title>
+</head>
+<body>
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        api.openFrame({
+            name: 'lockScreen',
+            url: './lockScreen.html',
+            bounces: false,
+            vScrollBarEnabled: false,
+            hScrollBarEnabled: false,
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            }
+        });
+    }
+</script>
+</body>
+</html>
