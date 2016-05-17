@@ -11,14 +11,12 @@
             font-size:70px;
             color:#5a5a5a;
             text-align:center;
-            padding-top:auto;
-            padding-bottom:auto;
         }
 
         .hint{
             font-size :20px;
             color:#5a5a5a;
-            height:50px;;
+            height:50px;
             text-align:center;
         }
 
@@ -27,35 +25,31 @@
 <body>
 <div>
     <div id="num" class="num"></div>
-    <div class="hint">>>>向右滑动解锁>>></div>
+    <footer>
+        <div class="hint">>>>向右滑动解锁>>></div>
+    </footer>
 </div>
-
 
 <script src="../script/zepto.min.js"></script>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/functions.js"></script>
 <script type="text/javascript">
     apiready = function(){
-        domNum = $('#num');
         $api.fixStatusBar( $api.dom('header') );
+        domNum = $('#num');
         initWindow();
     };
 
     function initWindow(){
 
-        domNum.css('height', (api.winHeight-50)+"px");
-        domNum.css('line-height', (api.winHeight-70)+"px");
+        domNum.css('height', (api.frameHeight-100)+"px");
+        domNum.css('line-height', (api.frameHeight-100)+"px");
 
-        api.getPrefs({
-            key: 'counter_num'
-        }, function( ret, err ){
-            if( ret ){
-                num = parseInt(ret.value);
-                domNum.html(num);
-            }else{
-                num = parseInt(0);
-                domNum.html.val(num);
-            }
-        });
+        num = $api.getStorage('counter_num');
+        if( isNaN(num)){
+            num = 0;
+        }
+        domNum.html(num);
 
         api.addEventListener({
             name:'keyback'
@@ -86,25 +80,8 @@
     }
 
     function addOne(){
-        api.getPrefs({
-            key: 'counter_num'
-        }, function( ret, err ){
-            if( ret ){
-                num = parseInt(ret.value)+1;
-                api.setPrefs({
-                    key: 'counter_num',
-                    value: num
-                });
-                domNum.html(num);
-            }else{
-                num = parseInt(0);
-                api.setPrefs({
-                    key: 'counter_num',
-                    value: num
-                });
-                domNum.html.val(num);
-            }
-        });
+        num = addOneCountNum();
+        domNum.html(num);
     }
 
 </script>

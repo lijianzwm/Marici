@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <link rel="stylesheet" type="text/css" href="../css/login.css"/>
+</head>
+<body>
+<header class="title">补报数目</header>
+<div class="userinfo-wrapper">
+    <div class="userinfo-line"><div id="date">请选择日期</div></div>
+    <div class="userinfo-line"><input id="num" class="input" placeholder="请输入数目" /></div>
+    <div id="openPicker" class="button" >选择日期</div>
+    <div id="commit_num" class="button" >提交</div>
+    <div id="back" class="button" >返回</div>
+</div>
+<script src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/config.js"></script>
+<script type="text/javascript">
+
+    apiready = function() {
+        $api.fixStatusBar( $api.dom('header') );
+        openDatePicker();
+
+        $api.addEvt($api.dom('#openPicker'), 'click', function(){
+            openDatePicker();
+        });
+
+        $api.addEvt($api.dom('#back'), 'click', function(){
+            api.closeWin();
+        });
+
+        $api.addEvt($api.dom('#commit_num'), 'click', function(){
+            num= $('#num').val();
+            date = $('#date').html();
+
+            api.getPrefs({
+                key: 'user'
+            }, function( ret, err ){
+                if( ret ){
+                    user = $.parseJSON(ret.value);
+                    userid = user.id;
+                    api.ajax({
+                        url : apiHost+'/Api/Countin/supplementNum',
+                        method : 'post',
+                        dataType:'json',
+                        data : {
+                            values : {
+                                userid : userid,
+                                date : date,
+                                num : num,
+                                apikey : apiKey
+                            }
+                        }
+                    }, function(ret, err){
+                        if( ret ){
+                            if( ret.error_code ){
+                                alert(ret.msg);
+                            }else{
+                                alert("补报成功!");
+                                api.closeWin();
+                            }
+                        }else{
+                            alert(JSON.stringify(err))
+                        }
+                    });
+                }else{
+                    alert(JSON.stringify(err))
+                }
+            });
+        });
+
+        function openDatePicker(){
+
+            var today=new Date();
+            var yesterday=new Date();
+            yesterday.setTime(today.getTime()-1000*60*60*24);
+
+            var year=yesterday.getFullYear();
+            var month=yesterday.getMonth()+1;
+            var day=yesterday.getDate();
+
+            if(month<10){
+                month="0"+month;
+            }
+            if( day < 10 ){
+                day = "0"+day;
+            }
+            var strYesterday=year+"-"+month+"-"+day;
+
+            api.openPicker({
+                type: 'date',
+                date: strYesterday,
+                title: '选择补报时间'
+            }, function(ret, err){
+                if( ret ){
+                    year = ret.year;
+                    month = ret.month;
+                    day = ret.day;
+                    if( month < 10 ){
+                        month = "0" + month;
+                    }
+                    if( day < 10 ){
+                        day = "0" + day;
+                    }
+                    yearMonthDay = year + '-' + month + '-' + day;
+                    $('#date').html(yearMonthDay);
+                }else{
+                    alert( JSON.stringify( err ) );
+                }
+            });
+        }
+
+    }
+</script>
+
+</body>
+
+</html>

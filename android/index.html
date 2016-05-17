@@ -76,22 +76,22 @@
 
         footer>div:nth-child(1).active {
             background-image: url(./image/footer/counter-active.png);
-            color: rgb(254, 151, 84);
+            color: #000000;
         }
 
         footer>div:nth-child(2).active {
             background-image: url(./image/footer/yigui-active.png);
-            color: rgb(254, 151, 84);
+            color: #000000;
         }
 
         footer>div:nth-child(3).active {
             background-image: url(./image/footer/ranklist-active.png);
-            color: rgb(254, 151, 84);
+            color: #000000;
         }
 
         footer>div:nth-child(4).active {
             background-image: url(./image/footer/user-active.png);
-            color: rgb(254, 151, 84);
+            color: #000000;
         }
 
         .header-item {
@@ -153,7 +153,7 @@
     </div>
 
     <div class="header-item" id="user">
-        <div>用户信息</div>
+        <div>我的共修</div>
     </div>
 
 </header>
@@ -163,16 +163,18 @@
     <div class="active" tapmode="active" onclick="fnFooterChange(0)">计数</div>
     <div tapmode="active" onclick="fnFooterChange(1)">仪轨</div>
     <div tapmode="active" onclick="fnFooterChange(2)">排行</div>
-    <div tapmode="active" onclick="fnFooterChange(3)">用户</div>
+    <div tapmode="active" onclick="fnFooterChange(3)">个人</div>
 </footer>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
-<script type="text/javascript" src="./script/localdb.js"></script>
+<script type="text/javascript" src="./script/functions.js"></script>
 <script type="text/javascript">
     apiready = function() {
         fnInitEvent();
         fnInit();
         fnFooterChange(0);
+        eventHandler();
+        checkLogin();
     };
 
     function fnInitEvent() {
@@ -196,7 +198,7 @@
                 });
             }
         });
-    };
+    }
 
 
     var headers, footers, headerHeight, footerHeight;
@@ -209,12 +211,13 @@
         footers = $api.domAll(footer, 'div');
 
         for (var i = 0; i < headers.length; i++) {
-            $api.fixIos7Bar(headers[i]);
+//            $api.fixIos7Bar(headers[i]);
+            $api.fixStatusBar(headers[i]);
         }
 
         headerHeight = $api.offset(header).h;
         footerHeight = $api.offset(footer).h;
-    };
+    }
 
     var frames = ['counter_frame', 'yigui_frame', 'ranklist_frame', 'user_frame'];
 
@@ -223,7 +226,7 @@
             if (index == i) {
                 $api.addCls(headers[i], 'header-item-act');
                 $api.addCls(footers[i], 'active');
-                var y = 1 == index ? 0 : headerHeight;
+                var y = (1 == index || 2 == index ) ? 0 : headerHeight;
                 api.openFrame({
                     name: frames[i],
                     url: './html/' + frames[i] + '.html',
@@ -247,8 +250,46 @@
                 });
             }
         }
-    };
+    }
 
+    function eventHandler(){
+        api.addEventListener({
+            name:'volumeup'
+        },function(ret,err){
+            addOneCountNum();
+        });
+
+        api.addEventListener({
+            name:'volumedown'
+        },function(ret,err){
+            addOneCountNum();
+        });
+    }
+
+    function checkLogin(){
+        userid = -1;
+        api.getPrefs({
+            key: 'user'
+        }, function( ret, err ){
+            if( !ret ){
+                openLoginWindow();
+            }else{
+                if( ret.value == "" ){
+                    openLoginWindow();
+                }
+            }
+        });
+    }
+
+    function openLoginWindow(){
+        api.openWin({
+            name: 'login',
+            url: './html/login.html',
+            pageParam: {
+                vScrollBarEnabled: false
+            }
+        });
+    }
 
 </script>
 

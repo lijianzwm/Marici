@@ -44,17 +44,17 @@
     };
 
     function autoFillPhone(){
-        api.getPhoneNumber(
-            function(ret, err){
-                if(ret){
-                    phone= ret.value;
-                    if( phone[0] == '+'){
-                        phone = phone.substr(3);
-                    }
-                    $("#phone").val(phone);
-                }
-            }
-        );
+//        api.getPhoneNumber(
+//            function(ret, err){
+//                if(ret){
+//                    phone= ret.value;
+//                    if( phone[0] == '+'){
+//                        phone = phone.substr(3);
+//                    }
+//                    $("#phone").val(phone);
+//                }
+//            }
+//        );
     }
 
     function eventHandler(){
@@ -64,7 +64,11 @@
                 if( isPhonelegal() ){
                     sendCode();
                 }else{
-                    alert("请填写正确的手机号");
+                    api.toast({
+                        msg: "请填写正确的手机号",
+                        duration: 2000,
+                        location: 'bottom'
+                    });
                 }
             }
         });
@@ -75,11 +79,23 @@
             password = $("#password").val();
             realname = $("#realname").val();
             if( inputCode == "" ){
-                alert("请点击“发送验证码”，收到验证短信后，将短信中的验证码输入到文本框内")
+                api.toast({
+                    msg: "请填写验证码",
+                    duration: 2000,
+                    location: 'bottom'
+                });
             }else if( code != inputCode ){
-                alert("您输入的验证码不正确！");
+                api.toast({
+                    msg: "验证码不正确",
+                    duration: 2000,
+                    location: 'bottom'
+                });
             }else if( password == "" ){
-                alert("请设置您的密码！");
+                api.toast({
+                    msg: "请设置密码",
+                    duration: 2000,
+                    location: 'bottom'
+                });
             }else{
                 //TODO 校验密码
                 regist(phone,password,realname);
@@ -103,7 +119,6 @@
 
     function sendCode(){
         refreshCode();
-        alert(code);
         api.ajax({
             url : apiHost+'/Api/Message/sendVerifyCode',
             method : 'post',
@@ -156,7 +171,11 @@
         }, function(ret, err){
             if( ret ){
                 if( ret.error_code ){
-                    alert(ret.msg);
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
                 }else{
                     alert(ret.msg);
                     api.closeWin();
