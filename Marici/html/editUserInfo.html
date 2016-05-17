@@ -31,6 +31,7 @@
         <div><input placeholder="请输入发愿完成的总数" id="goal"/></div>
     </div>
     <div class="button" id="edit_button" >更新用户信息</div>
+    <div class="button" id="back" >返回</div>
 </div>
 <script src="../script/zepto.min.js"></script>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -61,7 +62,8 @@
     }
 
     function eventHandler(){
-        $('#edit_button').click(function(){
+
+        $api.addEvt( $api.dom('#edit_button'), 'click', function(){
             if( checkInput() ){
                 api.ajax({
                     url : apiHost+'/Api/User/updateUserInfo',
@@ -96,7 +98,12 @@
                     }
                 });
             }
-        })
+        });
+
+        $api.addEvt( $api.dom('#back'), 'click', function(){
+            api.closeWin();
+        });
+
     }
 
     function checkInput(){

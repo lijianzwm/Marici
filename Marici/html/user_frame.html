@@ -88,8 +88,15 @@
             <div class="content" id="total_progress"></div>
         </div>
         <div class="info-line">
+            <div class="button border" id="addNum">共修报数</div>
+        </div>
+        <div class="info-line">
+            <div class="button" id="supplement">补报数目</div>
+        </div>
+        <div class="info-line">
             <div class="button" id="editUserInfo">修改信息</div>
         </div>
+
         <div class="info-line">
             <div class="button" id="logout">退出登录</div>
         </div>
@@ -240,6 +247,39 @@
             });
         });
 
+        $api.addEvt( $api.dom('#addNum'), 'click', function(){
+            api.prompt({
+                title:"共修报数",
+                msg:"每日可多次上报,系统会自动统计当日总数;使用'同步服务器'功能后不必在此重新报数!",
+                buttons: ['报数', '取消']
+            }, function(ret, err){
+                if( ret ){
+                    num = ret.text;
+                    if( ret.buttonIndex == 1 ){
+                        api.getPrefs({
+                            key: 'user'
+                        }, function( ret, err ){
+                            if( ret ){
+                                user = JSON.parse(ret.value);
+                                pushNum(user.id, num);
+                            }else{
+                                alert(JSON.stringify(err))
+                            }
+                        });
+                    }
+                }else{
+                    alert( JSON.stringify( err ) );
+                }
+            });
+        });
+
+        $api.addEvt( $api.dom('#supplement'), 'click', function(){
+            api.openWin({
+                name: 'supplementNum',
+                url: './supplementNum.html'
+            });
+        });
+
     }
 
     function getProgress( num, goal ){
@@ -258,6 +298,42 @@
         }
         return progress;
     }
+
+
+
+    function pushNum(userid, num) {
+        if( isNaN(num) || num <= 0 ){
+            api.toast({
+                msg: "请输入大于0的有效数字",
+                duration: 1000,
+                location: 'bottom'
+            });
+        }
+        api.ajax({
+            url: apiHost + '/Api/Countin/addNum',
+            method: 'post',
+            dataType: 'json',
+            data: {
+                values: {
+                    apikey: apiKey,
+                    userid: userid,
+                    num: num
+                }
+            }
+        }, function (ret, err) {
+            if (ret) {
+                if (ret.error_code) {
+                    alert(ret.msg);
+                } else {
+                    alert("报数成功!");
+                    refreshUserInfo();
+                }
+            } else {
+                alert(JSON.stringify(err))
+            }
+        });
+    }
+
 
 </script>
 </body>
