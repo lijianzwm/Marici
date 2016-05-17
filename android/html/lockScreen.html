@@ -26,7 +26,7 @@
 <div>
     <div id="num" class="num"></div>
     <footer>
-        <div class="hint">>>>向右滑动解锁>>></div>
+        <div id="hint" class="hint">>>>向右滑动解锁>>></div>
     </footer>
 </div>
 
@@ -77,6 +77,9 @@
             addOne();
         });
 
+        $api.addEvt( $api.dom('#num'), 'click', function(){
+            addOne();
+        });
     }
 
     function addOne(){
