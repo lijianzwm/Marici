@@ -9,19 +9,16 @@
 <header class="title" id="title">用户注册</header>
 <div class="userinfo-wrapper">
     <div class="userinfo-line">
-        <input type="text" class="phone" id="phone" placeholder="请输入手机号"/>
+        <input type="text" class="phone" id="username" placeholder="请输入用户名"/>
     </div>
     <div class="userinfo-line">
-        <input class="code" id="code" placeholder="请输入验证码" />
+        <input type="password" id="password" placeholder="请输入密码"/>
     </div>
     <div class="userinfo-line">
-        <input id="realname" placeholder="请输入真实姓名"/>
+        <input type="password" id="confirm_password" placeholder="确认密码"/>
     </div>
-    <div class="userinfo-line">
-        <input type="password" id="password" placeholder="设置密码"/>
-    </div>
-    <div id="send_code" class="button" >发送验证码</div>
-    <div id="regist_button" class="button" >注册新用户</div>
+
+    <div id="regist_button" class="button" >注册</div>
     <div id="back" class="button" >返回</div>
 
 </div>
@@ -39,67 +36,61 @@
 
     apiready = function(){
         $api.fixStatusBar( $api.dom('header') );
-        autoFillPhone();
         eventHandler();
     };
 
-    function autoFillPhone(){
-//        api.getPhoneNumber(
-//            function(ret, err){
-//                if(ret){
-//                    phone= ret.value;
-//                    if( phone[0] == '+'){
-//                        phone = phone.substr(3);
-//                    }
-//                    $("#phone").val(phone);
-//                }
-//            }
-//        );
-    }
-
     function eventHandler(){
 
-        domSendCodeButton.click(function(){
-            if( isEnableClick ){
-                if( isPhonelegal() ){
-                    sendCode();
-                }else{
-                    api.toast({
-                        msg: "请填写正确的手机号",
-                        duration: 2000,
-                        location: 'bottom'
-                    });
-                }
-            }
-        });
-
         $('#regist_button').click(function(){
-            phone = $('#phone').val();
-            inputCode = $('#code').val();
+            username = $('#username').val();
             password = $("#password").val();
-            realname = $("#realname").val();
-            if( inputCode == "" ){
+            confirmPassword = $('#confirm_password').val();
+
+            var patrn= /^[\u4E00-\u9FA5A-Za-z0-9_]+$/;
+            if( username.length > 10 ){
                 api.toast({
-                    msg: "请填写验证码",
+                    msg: "用户名过长!",
                     duration: 2000,
                     location: 'bottom'
                 });
-            }else if( code != inputCode ){
-                api.toast({
-                    msg: "验证码不正确",
-                    duration: 2000,
-                    location: 'bottom'
-                });
-            }else if( password == "" ){
-                api.toast({
-                    msg: "请设置密码",
-                    duration: 2000,
-                    location: 'bottom'
-                });
-            }else{
-                //TODO 校验密码
-                regist(phone,password,realname);
+                return;
             }
+            if( username.length < 2 ){
+                api.toast({
+                    msg: "用户名过短!",
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return;
+            }
+            if(!patrn.exec(username)){
+                api.toast({
+                    msg: "用户名只能以中文,大小写字母和数字组成",
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return;
+            }
+
+            var passwordPatrn = /^(\w){6,20}$/;
+            if (!passwordPatrn.exec(password)){
+                api.toast({
+                    msg: "密码须由6-20个字母、数字、下划线组成",
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return;
+            }
+
+            if( password != confirmPassword ){
+                api.toast({
+                    msg: "两次密码不一致",
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return;
+            }
+            regist(username,password);
         });
 
         $('#back').click(function(){
@@ -117,30 +108,6 @@
         return (!isNaN(phone) && phone.length==11);
     }
 
-    function sendCode(){
-        refreshCode();
-        api.ajax({
-            url : apiHost+'/Api/Message/sendVerifyCode',
-            method : 'post',
-            dataType:'json',
-            data : {
-                values : {
-                    apikey : apiKey,
-                    phone : phone,
-                    code : code
-                }
-            }
-        }, function(ret, err){
-            if( ret ){
-                //TODO 发送成功！
-            }else{
-                alert(JSON.stringify(err))
-            }
-        });
-        jsSendMessageWait = 60;
-        time(domSendCodeButton);
-    }
-
     function time(obj){
         if( jsSendMessageWait == 0 ){
             obj.html("发送");
@@ -155,7 +122,7 @@
         }
     }
 
-    function regist(phone,password,realname){
+    function regist(username,password){
         api.ajax({
             url : apiHost+'/Api/User/regist',
             method : 'post',
@@ -163,9 +130,8 @@
             data : {
                 values : {
                     apikey : apiKey,
-                    phone : phone,
                     password : password,
-                    realname :realname
+                    username :username
                 }
             }
         }, function(ret, err){

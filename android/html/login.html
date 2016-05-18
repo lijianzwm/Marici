@@ -8,7 +8,7 @@
 <body>
 <header class="title">用户登录</header>
 <div class="userinfo-wrapper">
-    <div class="userinfo-line"><input id="phone" class="input" placeholder="手机号" /></div>
+    <div class="userinfo-line"><input id="username" class="input" placeholder="用户名" /></div>
     <div class="userinfo-line"><input type="password" id="password" class="input" placeholder="密码" /></div>
     <div id="login" class="button" >登录</div>
     <div id="regist" class="button" >注册</div>
@@ -23,21 +23,6 @@
     apiready = function(){
         $api.fixStatusBar( $api.dom('header') );
 
-        /**
-         * 这个函数在某些系统中不兼容,所以注释掉!
-         */
-//        api.getPhoneNumber(
-//            function(ret, err){
-//                if(ret){
-//                    phone= ret.value;
-//                    if( phone[0] == '+'){
-//                        phone = phone.substr(3);
-//                    }
-//                    $("#phone").val(phone);
-//                }
-//            }
-//        );
-
         api.addEventListener({
             name:'keyback'
         },function(ret,err){
@@ -49,7 +34,7 @@
         });
 
         $('#login').click(function(){
-            phone = $("#phone").val();
+            username = $("#username").val();
             password = $("#password").val();
             api.ajax({
                 url : apiHost+'/Api/User/loginVolidate',
@@ -58,7 +43,7 @@
                 data : {
                     values : {
                         apikey : apiKey,
-                        phone : phone,
+                        username : username,
                         password : password
                     }
                 }
@@ -67,7 +52,7 @@
                     if( ret.error_code ){
                         alert(ret.msg);
                     }else{
-                        user = ret.user;
+                        user = ret.data;
                         if( user.day_goal == null ){
                             api.toast({
                                 msg: "没有设置今日目标!",
