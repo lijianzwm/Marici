@@ -105,6 +105,7 @@
 <script src="../script/zepto.min.js"></script>
 <script src="../script/config.js"></script>
 <script src="../script/api.js"></script>
+<script src="../script/functions.js"></script>
 <script type="text/javascript">
     domRankTable = $('#rank_table');
     rankType = "today";//today, yesterday, curMonth,total
@@ -214,44 +215,31 @@
             dataType: 'json',
             data: data
         }, function (ret, err) {
-            ranklist = ret.ranklist;
-            api.getPrefs({
-                key: 'user'
-            }, function (ret, err) {
-                if (ret) {
-                    user = $.parseJSON(ret.value);
-                    userid = user.id;
-                    if (ret) {
-                        if (ret.error_code) {
-                            alert(ret.msg);
-                        } else {
-                            if(ranklist){
-                                for (var i = 0; i < ranklist.length; i++) {
-                                    rankItemStr = "<div class='rank-item'>";
-                                    if (ranklist[i].userid == userid) {
-                                        rankItemStr = "<div class='rank-item-active'>";
-                                    }
-                                    rankItemStr += "<div>" +
-                                            (i + 1) +
-                                            "</div>" +
-                                            "<div>" +
-                                            ranklist[i].name +
-                                            "</div>" +
-                                            "<div>" +
-                                            ranklist[i].num +
-                                            "</div>" +
-                                            "</div>";
-                                    domRankTable.append(rankItemStr);
-                                }
-                            }
+            if( ret ){
+                ranklist = ret.ranklist;
+                user = getUserInfo();
+                if(ranklist){
+                    for (var i = 0; i < ranklist.length; i++) {
+                        rankItemStr = "<div class='rank-item'>";
+                        if (ranklist[i].userid == userid) {
+                            rankItemStr = "<div class='rank-item-active'>";
                         }
-                    } else {
-                        alert(JSON.stringify(err))
+                        rankItemStr += "<div>" +
+                                (i + 1) +
+                                "</div>" +
+                                "<div>" +
+                                ranklist[i].name +
+                                "</div>" +
+                                "<div>" +
+                                ranklist[i].num +
+                                "</div>" +
+                                "</div>";
+                        domRankTable.append(rankItemStr);
                     }
-                } else {
-                    alert(JSON.stringify(err))
                 }
-            });
+            }else{
+                alert(JSON.stringify(err));
+            }
         });
     }
 

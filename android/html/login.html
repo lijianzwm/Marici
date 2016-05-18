@@ -18,6 +18,7 @@
 <script src="../script/zepto.min.js"></script>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/config.js"></script>
+<script type="text/javascript" src="../script/functions.js"></script>
 <script type="text/javascript">
 
     apiready = function(){
@@ -67,10 +68,7 @@
                                 location: 'bottom'
                             });
                         }
-                        api.setPrefs({
-                            key: 'user',
-                            value: user
-                        });
+                        setUserInfo(user);
                         api.closeWin();
                     }
                 }else{

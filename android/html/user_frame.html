@@ -103,6 +103,7 @@
     </div>
 <script src="../script/api.js"></script>
 <script src="../script/config.js"></script>
+<script src="../script/functions.js"></script>
 <script type="text/javascript">
 
     domShowName = $api.dom('#showname');
@@ -138,38 +139,31 @@
     }
 
     function refreshUserInfo(){
-        api.getPrefs({
-            key: 'user'
-        }, function( ret, err ){
+
+        user = getUserInfo();
+        api.ajax({
+            url : apiHost+'/Api/User/getUserInfo',
+            method : 'post',
+            dataType:'json',
+            data : {
+                values : {
+                    apikey : apiKey,
+                    userid : user.id
+                }
+            }
+        }, function(ret, err){
             if( ret ){
-                user = JSON.parse(ret.value);
-                api.ajax({
-                    url : apiHost+'/Api/User/getUserInfo',
-                    method : 'post',
-                    dataType:'json',
-                    data : {
-                        values : {
-                            apikey : apiKey,
-                            userid : user.id
-                        }
-                    }
-                }, function(ret, err){
-                    if( ret ){
-                        if( ret.error_code == 0 ){
-                            user = ret.user;
-                            $api.html(domShowName, "&nbsp;" + user.showname);
-                            todayGoal = user.day_goal;
-                            totalGoal = user.goal;
-                            todayGoal = todayGoal == 0 ? "<div style='display:inline-block;color:red;text-align:left;'>未设置</div>" : todayGoal;
-                            totalGoal = totalGoal == 0 ? "<div style='display:inline-block;color:red;text-align:left;'>未设置</div>" : totalGoal;
-                            $api.html(domTodayGoal, "&nbsp;" + todayGoal);
-                            $api.html(domTotalGoal, "&nbsp;"+totalGoal);
-                            initNum(user.id);
-                        }
-                    }else{
-                        alert(JSON.stringify(err))
-                    }
-                });
+                if( ret.error_code == 0 ){
+                    user = ret.user;
+                    $api.html(domShowName, "&nbsp;" + user.showname);
+                    todayGoal = user.day_goal;
+                    totalGoal = user.goal;
+                    todayGoal = todayGoal == 0 ? "<div style='display:inline-block;color:red;text-align:left;'>未设置</div>" : todayGoal;
+                    totalGoal = totalGoal == 0 ? "<div style='display:inline-block;color:red;text-align:left;'>未设置</div>" : totalGoal;
+                    $api.html(domTodayGoal, "&nbsp;" + todayGoal);
+                    $api.html(domTotalGoal, "&nbsp;"+totalGoal);
+                    initNum(user.id);
+                }
             }else{
                 alert(JSON.stringify(err))
             }
@@ -256,16 +250,9 @@
                 if( ret ){
                     num = ret.text;
                     if( ret.buttonIndex == 1 ){
-                        api.getPrefs({
-                            key: 'user'
-                        }, function( ret, err ){
-                            if( ret ){
-                                user = JSON.parse(ret.value);
-                                pushNum(user.id, num);
-                            }else{
-                                alert(JSON.stringify(err))
-                            }
-                        });
+                        user = getUserInfo();
+                        user = JSON.parse(ret.value);
+                        pushNum(user.id, num);
                     }
                 }else{
                     alert( JSON.stringify( err ) );

@@ -25,39 +25,37 @@ function resetCountNum(){
     $api.setStorage('counter_num', 0);
 }
 
-function getUserInfo(){
-    userInfo = null;
-    api.getPrefs({
-        key: 'user'
-    }, function( ret, err ){
-        if( ret ){
-            userInfo = $.parseJSON(ret.value);
-        }else{
-            alert(JSON.stringify(err))
-        }
-    });
-    return userInfo;
-}
+// function getUserInfo(){
+    // userInfo = null;
+    // api.getPrefs({
+    //     key: 'user'
+    // }, function( ret, err ){
+    //     if( ret ){
+    //         userInfo = $.parseJSON(ret.value);
+    //     }else{
+    //         alert(JSON.stringify(err))
+    //     }
+    // });
+    // return userInfo;
+// }
 
 function setUserInfo(user){
-    api.setPrefs({
-        key: 'user',
-        value: user
-    });
+    $api.setStorage("user", user);
 }
 
-function autoFillPhone(domPhone){
-    // api.getPhoneNumber(
-    //     function(ret, err){
-    //         if(ret){
-    //             phone= ret.value;
-    //             if( phone[0] == '+'){
-    //                 phone = phone.substr(3);
-    //             }
-    //             domPhone.val(phone);
-    //         }
-    //     }
-    // );
+function getUserInfo(){
+    user = $api.getStorage("user");
+    if( user ){
+        return user;
+    }else{
+        api.openWin({
+            name: 'login',
+            url: './html/login.html',
+            pageParam: {
+                vScrollBarEnabled: false
+            }
+        });
+    }
 }
 
 function sendCode(code, phone, domSendCodeButton,jsSendMessageWait){

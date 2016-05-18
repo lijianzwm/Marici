@@ -76,16 +76,8 @@
     }
 
     function sync() {
-        api.getPrefs({
-            key: 'user'
-        }, function (ret, err) {
-            if (ret) {
-                user = JSON.parse(ret.value);
-                pushNum(user.id, $api.val(domCounterButton));
-            } else {
-                alert(JSON.stringify(err))
-            }
-        });
+        user = getUserInfo();
+        pushNum(user.id, $api.val(domCounterButton));
     }
 
     function pushNum(userid, num) {

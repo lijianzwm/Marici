@@ -34,37 +34,28 @@
         $api.addEvt($api.dom('#commit_num'), 'click', function(){
             num= $('#num').val();
             date = $('#date').html();
-
-            api.getPrefs({
-                key: 'user'
-            }, function( ret, err ){
+            user = getUserInfo();
+            userid = user.id;
+            api.ajax({
+                url : apiHost+'/Api/Countin/supplementNum',
+                method : 'post',
+                dataType:'json',
+                data : {
+                    values : {
+                        userid : userid,
+                        date : date,
+                        num : num,
+                        apikey : apiKey
+                    }
+                }
+            }, function(ret, err){
                 if( ret ){
-                    user = $.parseJSON(ret.value);
-                    userid = user.id;
-                    api.ajax({
-                        url : apiHost+'/Api/Countin/supplementNum',
-                        method : 'post',
-                        dataType:'json',
-                        data : {
-                            values : {
-                                userid : userid,
-                                date : date,
-                                num : num,
-                                apikey : apiKey
-                            }
-                        }
-                    }, function(ret, err){
-                        if( ret ){
-                            if( ret.error_code ){
-                                alert(ret.msg);
-                            }else{
-                                alert("补报成功!");
-                                api.closeWin();
-                            }
-                        }else{
-                            alert(JSON.stringify(err))
-                        }
-                    });
+                    if( ret.error_code ){
+                        alert(ret.msg);
+                    }else{
+                        alert("补报成功!");
+                        api.closeWin();
+                    }
                 }else{
                     alert(JSON.stringify(err))
                 }

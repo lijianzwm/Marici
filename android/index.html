@@ -267,18 +267,7 @@
     }
 
     function checkLogin(){
-        userid = -1;
-        api.getPrefs({
-            key: 'user'
-        }, function( ret, err ){
-            if( !ret ){
-                openLoginWindow();
-            }else{
-                if( ret.value == "" ){
-                    openLoginWindow();
-                }
-            }
-        });
+        getUserInfo();
     }
 
     function openLoginWindow(){

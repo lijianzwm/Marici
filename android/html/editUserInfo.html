@@ -40,16 +40,8 @@
 <script>
     user = null;
     apiready = function(){
-        api.getPrefs({
-            key: 'user'
-        }, function( ret, err ){
-            if( ret ){
-                user = $.parseJSON(ret.value);
-                fillInput(user);
-            }else{
-                alert(JSON.stringify(err))
-            }
-        });
+        user = getUserInfo();
+        fillInput(user);
         eventHandler();
     };
 
