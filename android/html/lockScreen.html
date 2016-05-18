@@ -45,7 +45,7 @@
         domNum.css('height', (api.frameHeight-100)+"px");
         domNum.css('line-height', (api.frameHeight-100)+"px");
 
-        num = $api.getStorage('counter_num');
+        num = getCountNum();
         if( isNaN(num)){
             num = 0;
         }

@@ -217,9 +217,8 @@
             },function( ret, err ){
                 if( ret ){
                     if( ret.buttonIndex == 2){
-                        api.removePrefs({
-                            key: 'user'
-                        });
+                        setUserInfo(null);
+//                        alert(JSON.stringify(getUserInfo()));
                         api.openWin({
                             name: 'login',
                             url: '../html/login.html',
@@ -251,7 +250,6 @@
                     num = ret.text;
                     if( ret.buttonIndex == 1 ){
                         user = getUserInfo();
-                        user = JSON.parse(ret.value);
                         pushNum(user.id, num);
                     }
                 }else{

@@ -1,5 +1,6 @@
 function getCountNum(){
-    num = $api.getStorage('counter_num');
+    user = getUserInfo();
+    num = $api.getStorage('counter_num_id'+user.id);
     if( num ){
         return parseInt(num);
     }else{//如果没有counter_num这个key,返回0
@@ -11,7 +12,8 @@ function setCountNum(num){
     if( isNaN(num) ){
         alert("setCountNum传的值不是数字!");
     }else{
-        $api.setStorage('counter_num', parseInt(num));
+        user = getUserInfo();
+        $api.setStorage('counter_num_id'+user.id, parseInt(num));
     }
 }
 
@@ -22,7 +24,8 @@ function addOneCountNum(){
 }
 
 function resetCountNum(){
-    $api.setStorage('counter_num', 0);
+    user = getUserInfo();
+    $api.setStorage('counter_num_id'+user.id, 0);
 }
 
 // function getUserInfo(){
